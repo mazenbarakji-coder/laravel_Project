@@ -1,0 +1,61 @@
+# ===============================
+# Dependencies
+# ===============================
+/vendor
+/node_modules
+
+# ===============================
+# Environment & Security
+# ===============================
+.env
+.env.*
+!.env.example
+
+# ===============================
+# Laravel cache & runtime files
+# ===============================
+/bootstrap/cache/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/logs/*
+/storage/*.key
+
+# ===============================
+# User uploads (IMPORTANT for 6valley)
+# ===============================
+/storage/app/*
+!/storage/app/public
+
+/public/storage
+/public/uploads
+/public/assets/images/uploads
+/public/assets/files
+/public/assets/temp
+
+# ===============================
+# Frontend build files
+# ===============================
+/public/build
+/public/hot
+/public/mix-manifest.json
+
+# ===============================
+# Testing & tools
+# ===============================
+.phpunit.result.cache
+
+# ===============================
+# IDE & OS
+# ===============================
+.idea
+.vscode
+.DS_Store
+Thumbs.db
+
+# ===============================
+# Logs
+# ===============================
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
