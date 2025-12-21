@@ -11,16 +11,12 @@ class AddDealTypeToFlashDeals extends Migration
      *
      * @return void
      */
-public function up()
-{
-    if (Schema::hasTable('flash_deals')) {
+    public function up()
+    {
         Schema::table('flash_deals', function (Blueprint $table) {
-            if (!Schema::hasColumn('flash_deals', 'deal_type')) {
-                $table->string('deal_type')->nullable();
-            }
+            $table->string('deal_type')->nullable();
         });
     }
-}
 
     /**
      * Reverse the migrations.
