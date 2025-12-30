@@ -106,7 +106,8 @@ class AppServiceProvider extends ServiceProvider
                 'ref_earning_status' => 0,
             ];
             // Default language structure - matches BusinessSetting model format
-            $language = (object)[
+            // Create an array that can be accessed like $language['value']
+            $language = [
                 'value' => json_encode([
                     [
                         'id' => 1,
@@ -306,7 +307,7 @@ class AppServiceProvider extends ServiceProvider
                     $language = BusinessSetting::where('type', 'language')->first();
                     // If language is null, use default
                     if (!$language) {
-                        $language = (object)[
+                        $language = [
                             'value' => json_encode([
                                 [
                                     'id' => 1,
