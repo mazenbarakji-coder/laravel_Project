@@ -95,6 +95,11 @@ class AppServiceProvider extends ServiceProvider
                 'main_categories' => collect([]),
                 'currencies' => collect([]),
                 'social_media' => collect([]),
+                'brand_setting' => '0',
+                'discount_product' => 0,
+                'recaptcha' => null,
+                'socials_login' => null,
+                'social_login_text' => null,
             ];
             $language = null;
 
