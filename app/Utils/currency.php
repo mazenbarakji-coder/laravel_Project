@@ -157,17 +157,33 @@ if (!function_exists('getCurrencyCode')) {
      */
     function getCurrencyCode(string $type = 'default'): string
     {
+        $currencyCode = null;
+        
         if ($type == 'web') {
             $currencyCode = session('currency_code');
         } else {
             if (session()->has('system_default_currency_info')) {
-                $currencyCode = session('system_default_currency_info')->code;
+                $systemDefaultCurrencyInfo = session('system_default_currency_info');
+                $currencyCode = is_object($systemDefaultCurrencyInfo) && isset($systemDefaultCurrencyInfo->code) 
+                    ? $systemDefaultCurrencyInfo->code 
+                    : null;
             } else {
                 $currencyId = getWebConfig('system_default_currency');
-                $currencyCode = Currency::where('id', $currencyId)->first()->code;
+                if ($currencyId) {
+                    try {
+                        if (\Illuminate\Support\Facades\Schema::hasTable('currencies')) {
+                            $currency = Currency::where('id', $currencyId)->first();
+                            $currencyCode = $currency ? $currency->code : null;
+                        }
+                    } catch (\Exception $e) {
+                        $currencyCode = null;
+                    }
+                }
             }
         }
-        return $currencyCode;
+        
+        // Return default currency code if all lookups fail
+        return $currencyCode ?? 'USD';
     }
 }
 
