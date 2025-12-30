@@ -104,6 +104,8 @@ class AppServiceProvider extends ServiceProvider
                 'header_banner' => null,
                 'payments_list' => collect([]),
                 'ref_earning_status' => 0,
+                'ios' => ['status' => 0, 'link' => ''],
+                'android' => ['status' => 0, 'link' => ''],
             ];
             // Default language structure - matches BusinessSetting model format
             // Create an array that can be accessed like $language['value']
