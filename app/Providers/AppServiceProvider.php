@@ -105,7 +105,19 @@ class AppServiceProvider extends ServiceProvider
                 'payments_list' => collect([]),
                 'ref_earning_status' => 0,
             ];
-            $language = null;
+            // Default language structure - matches BusinessSetting model format
+            $language = (object)[
+                'value' => json_encode([
+                    [
+                        'id' => 1,
+                        'code' => 'en',
+                        'name' => 'English',
+                        'direction' => 'ltr',
+                        'status' => 1,
+                        'default' => true,
+                    ]
+                ])
+            ];
 
             try {
                 if (Schema::hasTable('business_settings')) {
@@ -292,6 +304,21 @@ class AppServiceProvider extends ServiceProvider
 
                     //language
                     $language = BusinessSetting::where('type', 'language')->first();
+                    // If language is null, use default
+                    if (!$language) {
+                        $language = (object)[
+                            'value' => json_encode([
+                                [
+                                    'id' => 1,
+                                    'code' => 'en',
+                                    'name' => 'English',
+                                    'direction' => 'ltr',
+                                    'status' => 1,
+                                    'default' => true,
+                                ]
+                            ])
+                        ];
+                    }
 
                     //currency
                     try {
