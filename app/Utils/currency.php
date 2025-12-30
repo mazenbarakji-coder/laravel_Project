@@ -8,15 +8,72 @@ if (!function_exists('loadCurrency')) {
      */
     function loadCurrency(): void
     {
-        $defaultCurrency = getWebConfig(name: 'system_default_currency');
-        $currentCurrencyInfo = session('system_default_currency_info');
-        if (!session()->has('system_default_currency_info') || $defaultCurrency != $currentCurrencyInfo['id']) {
-            $id = getWebConfig(name: 'system_default_currency');
-            $currency = Currency::find($id);
-            session()->put('system_default_currency_info', $currency);
-            session()->put('currency_code', $currency->code);
-            session()->put('currency_symbol', $currency->symbol);
-            session()->put('currency_exchange_rate', $currency->exchange_rate);
+        try {
+            if (!\Illuminate\Support\Facades\Schema::hasTable('currencies')) {
+                // Table doesn't exist, set default currency values
+                if (!session()->has('currency_code')) {
+                    session()->put('currency_code', 'USD');
+                }
+                if (!session()->has('currency_symbol')) {
+                    session()->put('currency_symbol', '$');
+                }
+                if (!session()->has('currency_exchange_rate')) {
+                    session()->put('currency_exchange_rate', 1);
+                }
+                return;
+            }
+
+            $defaultCurrency = getWebConfig(name: 'system_default_currency');
+            $currentCurrencyInfo = session('system_default_currency_info');
+            
+            if (!session()->has('system_default_currency_info') || 
+                ($defaultCurrency && is_array($currentCurrencyInfo) && $defaultCurrency != ($currentCurrencyInfo['id'] ?? null)) ||
+                ($defaultCurrency && is_object($currentCurrencyInfo) && $defaultCurrency != ($currentCurrencyInfo->id ?? null))) {
+                
+                $id = getWebConfig(name: 'system_default_currency');
+                if ($id) {
+                    $currency = Currency::find($id);
+                    if ($currency) {
+                        session()->put('system_default_currency_info', $currency);
+                        session()->put('currency_code', $currency->code);
+                        session()->put('currency_symbol', $currency->symbol);
+                        session()->put('currency_exchange_rate', $currency->exchange_rate);
+                    } else {
+                        // Currency not found, set defaults
+                        if (!session()->has('currency_code')) {
+                            session()->put('currency_code', 'USD');
+                        }
+                        if (!session()->has('currency_symbol')) {
+                            session()->put('currency_symbol', '$');
+                        }
+                        if (!session()->has('currency_exchange_rate')) {
+                            session()->put('currency_exchange_rate', 1);
+                        }
+                    }
+                } else {
+                    // No default currency configured, set defaults
+                    if (!session()->has('currency_code')) {
+                        session()->put('currency_code', 'USD');
+                    }
+                    if (!session()->has('currency_symbol')) {
+                        session()->put('currency_symbol', '$');
+                    }
+                    if (!session()->has('currency_exchange_rate')) {
+                        session()->put('currency_exchange_rate', 1);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // Error loading currency, set defaults
+            if (!session()->has('currency_code')) {
+                session()->put('currency_code', 'USD');
+            }
+            if (!session()->has('currency_symbol')) {
+                session()->put('currency_symbol', '$');
+            }
+            if (!session()->has('currency_exchange_rate')) {
+                session()->put('currency_exchange_rate', 1);
+            }
         }
     }
 }
@@ -29,16 +86,26 @@ if (!function_exists('currencyConverter')) {
      */
     function currencyConverter(float $amount, string $to = USD): float|int
     {
-        $currencyModel = getWebConfig('currency_model');
-        if ($currencyModel == MULTI_CURRENCY) {
-            $default = Currency::find(getWebConfig('system_default_currency'))->exchange_rate;
-            $exchangeRate = exchangeRate($to);
-            $rate = $default / $exchangeRate;
-            $value = $amount / floatval($rate);
-        } else {
-            $value = $amount;
+        try {
+            $currencyModel = getWebConfig('currency_model');
+            if ($currencyModel == MULTI_CURRENCY) {
+                $currencyId = getWebConfig('system_default_currency');
+                if ($currencyId && \Illuminate\Support\Facades\Schema::hasTable('currencies')) {
+                    $currency = Currency::find($currencyId);
+                    $default = $currency ? ($currency->exchange_rate ?? 1) : 1;
+                } else {
+                    $default = 1;
+                }
+                $exchangeRate = exchangeRate($to);
+                $rate = $default / $exchangeRate;
+                $value = $amount / floatval($rate);
+            } else {
+                $value = $amount;
+            }
+            return $value;
+        } catch (\Exception $e) {
+            return $amount;
         }
-        return $value;
     }
 }
 
@@ -50,29 +117,39 @@ if (!function_exists('usdToDefaultCurrency')) {
      */
     function usdToDefaultCurrency(float|int|null $amount = 0): float|int
     {
-        $currencyModel = getWebConfig('currency_model');
-        if ($currencyModel == MULTI_CURRENCY) {
-            if (session()->has('default')) {
-                $default = session('default');
+        try {
+            $currencyModel = getWebConfig('currency_model');
+            if ($currencyModel == MULTI_CURRENCY) {
+                if (session()->has('default')) {
+                    $default = session('default');
+                } else {
+                    $currencyId = getWebConfig('system_default_currency');
+                    if ($currencyId && \Illuminate\Support\Facades\Schema::hasTable('currencies')) {
+                        $currency = Currency::find($currencyId);
+                        $default = $currency ? ($currency->exchange_rate ?? 1) : 1;
+                    } else {
+                        $default = 1;
+                    }
+                    session()->put('default', $default);
+                }
+
+                if (session()->has('usd')) {
+                    $usd = session('usd');
+                } else {
+                    $usd = exchangeRate(USD);
+                    session()->put('usd', $usd);
+                }
+
+                $rate = $default / $usd;
+                $value = $amount * floatval($rate);
             } else {
-                $default = Currency::find(getWebConfig('system_default_currency'))->exchange_rate;
-                session()->put('default', $default);
+                $value = $amount;
             }
 
-            if (session()->has('usd')) {
-                $usd = session('usd');
-            } else {
-                $usd = exchangeRate(USD);
-                session()->put('usd', $usd);
-            }
-
-            $rate = $default / $usd;
-            $value = $amount * floatval($rate);
-        } else {
-            $value = $amount;
+            return round($value, 2);
+        } catch (\Exception $e) {
+            return round($amount ?? 0, 2);
         }
-
-        return round($value, 2);
     }
 }
 
@@ -84,21 +161,31 @@ if (!function_exists('webCurrencyConverter')) {
      */
     function webCurrencyConverter(string|int|float $amount): float|string
     {
-        $currencyModel = getWebConfig('currency_model');
-        if ($currencyModel == MULTI_CURRENCY) {
-            if (session()->has('usd')) {
-                $usd = session('usd');
+        try {
+            $currencyModel = getWebConfig('currency_model');
+            if ($currencyModel == MULTI_CURRENCY) {
+                if (session()->has('usd')) {
+                    $usd = session('usd');
+                } else {
+                    if (\Illuminate\Support\Facades\Schema::hasTable('currencies')) {
+                        $usdCurrency = Currency::where(['code' => 'USD'])->first();
+                        $usd = $usdCurrency ? $usdCurrency->exchange_rate : 1;
+                    } else {
+                        $usd = 1;
+                    }
+                    session()->put('usd', $usd);
+                }
+                $myCurrency = \session('currency_exchange_rate') ?? 1;
+                $rate = $myCurrency / $usd;
             } else {
-                $usd = Currency::where(['code' => 'USD'])->first()->exchange_rate;
-                session()->put('usd', $usd);
+                $rate = 1;
             }
-            $myCurrency = \session('currency_exchange_rate');
-            $rate = $myCurrency / $usd;
-        } else {
-            $rate = 1;
-        }
 
-        return setCurrencySymbol(amount: round($amount * $rate, 2), currencyCode: getCurrencyCode(type: 'web'));
+            return setCurrencySymbol(amount: round($amount * $rate, 2), currencyCode: getCurrencyCode(type: 'web'));
+        } catch (\Exception $e) {
+            // Fallback to default conversion
+            return setCurrencySymbol(amount: round($amount, 2), currencyCode: getCurrencyCode(type: 'web'));
+        }
     }
 }
 
@@ -109,7 +196,15 @@ if (!function_exists('exchangeRate')) {
      */
     function exchangeRate(string $currencyCode = USD): float|int
     {
-        return Currency::where('code', $currencyCode)->first()->exchange_rate ?? 1;
+        try {
+            if (\Illuminate\Support\Facades\Schema::hasTable('currencies')) {
+                $currency = Currency::where('code', $currencyCode)->first();
+                return $currency ? ($currency->exchange_rate ?? 1) : 1;
+            }
+        } catch (\Exception $e) {
+            // Table doesn't exist or query failed
+        }
+        return 1;
     }
 }
 
@@ -125,9 +220,15 @@ if (!function_exists('getCurrencySymbol')) {
             $currentSymbol = session('currency_symbol');
         } else {
             $systemDefaultCurrencyInfo = session('system_default_currency_info');
-            $currentSymbol = $systemDefaultCurrencyInfo->symbol;
+            if (is_object($systemDefaultCurrencyInfo) && isset($systemDefaultCurrencyInfo->symbol)) {
+                $currentSymbol = $systemDefaultCurrencyInfo->symbol;
+            } elseif (is_array($systemDefaultCurrencyInfo) && isset($systemDefaultCurrencyInfo['symbol'])) {
+                $currentSymbol = $systemDefaultCurrencyInfo['symbol'];
+            } else {
+                $currentSymbol = '$'; // Default to USD symbol
+            }
         }
-        return $currentSymbol;
+        return $currentSymbol ?? '$';
     }
 }
 
