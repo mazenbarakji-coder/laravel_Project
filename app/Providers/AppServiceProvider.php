@@ -106,7 +106,7 @@ class AppServiceProvider extends ServiceProvider
                 'ref_earning_status' => 0,
                 'ios' => ['status' => 0, 'link' => ''],
                 'android' => ['status' => 0, 'link' => ''],
-                'cookie_setting' => ['value' => json_encode(['status' => 0])],
+                'cookie_setting' => ['value' => json_encode(['status' => 0, 'cookie_text' => ''])],
             ];
             // Default language structure - matches BusinessSetting model format
             // Create an array that can be accessed like $language['value']
