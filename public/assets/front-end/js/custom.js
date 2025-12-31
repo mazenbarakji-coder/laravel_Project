@@ -1169,6 +1169,10 @@ function orderSummaryStickyFunction() {
     const stickyElement = $(".bottom-sticky3");
     const offsetElement = $(".__cart-total_sticky .proceed_to_next_button");
 
+    if (stickyElement.length === 0 || offsetElement.length === 0) {
+        return; // Elements don't exist, exit early
+    }
+
     const elementOffset = offsetElement.offset().top;
     const scrollTop = $(window).scrollTop();
     if (scrollTop >= elementOffset - $(window).height() + 50) {
