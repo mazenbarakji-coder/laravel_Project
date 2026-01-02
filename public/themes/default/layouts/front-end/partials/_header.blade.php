@@ -1,9 +1,11 @@
-@php($announcement=getWebConfig(name: 'announcement'))
+@php
+    $announcement = getWebConfig('announcement');
+@endphp
 
-@if (isset($announcement) && $announcement['status']==1)
+@if (isset($announcement) && $announcement['status'] == 1)
     <div class="text-center position-relative px-4 py-1" id="announcement"
-         style="background-color: {{ $announcement['color'] }};color:{{$announcement['text_color']}}">
-        <span>{{ $announcement['announcement'] }} </span>
+         style="background-color: {{ $announcement['color'] ?? '#000' }}; color: {{ $announcement['text_color'] ?? '#fff' }}">
+        <span>{{ $announcement['announcement'] ?? '' }}</span>
         <span class="__close-announcement web-announcement-slideUp">X</span>
     </div>
 @endif
@@ -15,29 +17,41 @@
 
             <div>
                 <div class="topbar-text dropdown d-md-none ms-auto">
-                    <a class="topbar-link direction-ltr" href="tel: {{$web_config['phone']->value}}">
-                        <i class="fa fa-phone"></i> {{$web_config['phone']->value}}
+                    <a class="topbar-link direction-ltr" href="tel:{{ $web_config['phone']->value ?? '' }}">
+                        <i class="fa fa-phone"></i> {{ $web_config['phone']->value ?? '' }}
                     </a>
                 </div>
                 <div class="d-none d-md-block mr-2 text-nowrap">
-                    <a class="topbar-link d-none d-md-inline-block direction-ltr" href="tel:{{$web_config['phone']->value}}">
-                        <i class="fa fa-phone"></i> {{$web_config['phone']->value}}
+                    <a class="topbar-link d-none d-md-inline-block direction-ltr" href="tel:{{ $web_config['phone']->value ?? '' }}">
+                        <i class="fa fa-phone"></i> {{ $web_config['phone']->value ?? '' }}
                     </a>
                 </div>
             </div>
 
             <div>
-                @php($currency_model = getWebConfig(name: 'currency_model'))
-                @if($currency_model=='multi_currency')
+                @php
+                    $currency_model = getWebConfig('currency_model');
+                @endphp
+                @if($currency_model == 'multi_currency')
                     <div class="topbar-text dropdown disable-autohide mr-4">
                         <a class="topbar-link dropdown-toggle" href="#" data-toggle="dropdown">
-                            <span>{{session('currency_code')}} {{session('currency_symbol')}}</span>
+                            <span>{{ session('currency_code') ?? 'USD' }} {{ session('currency_symbol') ?? '$' }}</span>
                         </a>
-                        <ul class="text-align-direction dropdown-menu dropdown-menu-{{Session::get('direction') === "rtl" ? 'right' : 'left'}} min-width-160px">
-                            @foreach (\App\Models\Currency::where('status', 1)->get() as $key => $currency)
+                        <ul class="text-align-direction dropdown-menu dropdown-menu-{{ Session::get('direction') === 'rtl' ? 'right' : 'left' }} min-width-160px">
+                            @php
+                                $currencies = collect([]);
+                                try {
+                                    if (\Illuminate\Support\Facades\Schema::hasTable('currencies')) {
+                                        $currencies = \App\Models\Currency::where('status', 1)->get();
+                                    }
+                                } catch (\Exception $e) {
+                                    $currencies = collect([]);
+                                }
+                            @endphp
+                            @foreach ($currencies as $currency)
                                 <li class="dropdown-item cursor-pointer get-currency-change-function"
-                                    data-code="{{$currency['code']}}">
-                                    {{ $currency->name }}
+                                    data-code="{{ $currency['code'] ?? '' }}">
+                                    {{ $currency->name ?? '' }}
                                 </li>
                             @endforeach
                         </ul>
@@ -46,25 +60,38 @@
 
                 <div class="topbar-text dropdown disable-autohide  __language-bar text-capitalize">
                     <a class="topbar-link dropdown-toggle" href="#" data-toggle="dropdown">
-                        @foreach(json_decode($language['value'],true) as $data)
-                            @if($data['code'] == getDefaultLanguage())
+                        @php
+                            $languageData = [];
+                            try {
+                                if (isset($language['value'])) {
+                                    $languageData = json_decode($language['value'], true);
+                                    if (!is_array($languageData)) {
+                                        $languageData = [];
+                                    }
+                                }
+                            } catch (\Exception $e) {
+                                $languageData = [];
+                            }
+                        @endphp
+                        @foreach($languageData as $data)
+                            @if(isset($data['code']) && $data['code'] == getDefaultLanguage())
                                 <img class="mr-2" width="20"
-                                     src="{{theme_asset(path: 'public/assets/front-end/img/flags/'.$data['code'].'.png')}}"
-                                     alt="{{$data['name']}}">
-                                {{$data['name']}}
+                                     src="{{ theme_asset('public/assets/front-end/img/flags/'.$data['code'].'.png') }}"
+                                     alt="{{ $data['name'] ?? '' }}">
+                                {{ $data['name'] ?? '' }}
                             @endif
                         @endforeach
                     </a>
-                    <ul class="text-align-direction dropdown-menu dropdown-menu-{{Session::get('direction') === "rtl" ? 'right' : 'left'}}">
-                        @foreach(json_decode($language['value'],true) as $key =>$data)
-                            @if($data['status']==1)
-                                <li class="change-language" data-action="{{route('change-language')}}" data-language-code="{{$data['code']}}">
+                    <ul class="text-align-direction dropdown-menu dropdown-menu-{{ Session::get('direction') === 'rtl' ? 'right' : 'left' }}">
+                        @foreach($languageData as $key => $data)
+                            @if(isset($data['status']) && $data['status'] == 1)
+                                <li class="change-language" data-action="{{ route('change-language') }}" data-language-code="{{ $data['code'] ?? '' }}">
                                     <a class="dropdown-item pb-1" href="javascript:">
                                         <img class="mr-2"
                                              width="20"
-                                             src="{{theme_asset(path: 'public/assets/front-end/img/flags/'.$data['code'].'.png')}}"
-                                             alt="{{$data['name']}}"/>
-                                        <span class="text-capitalize">{{$data['name']}}</span>
+                                             src="{{ theme_asset('public/assets/front-end/img/flags/'.$data['code'].'.png') }}"
+                                             alt="{{ $data['name'] ?? '' }}"/>
+                                        <span class="text-capitalize">{{ $data['name'] ?? '' }}</span>
                                     </a>
                                 </li>
                             @endif
@@ -83,24 +110,24 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <a class="navbar-brand d-none d-sm-block mr-3 flex-shrink-0 __min-w-7rem"
-                   href="{{route('home')}}">
+                   href="{{ route('home') }}">
                     <img class="__inline-11"
-                         src="{{ getStorageImages(path: $web_config['web_logo'], type: 'logo') }}"
-                         alt="{{$web_config['name']->value}}">
+                         src="{{ getStorageImages(path: $web_config['web_logo'] ?? null, type: 'logo') }}"
+                         alt="{{ $web_config['name']->value ?? 'Logo' }}">
                 </a>
                 <a class="navbar-brand d-sm-none"
-                   href="{{route('home')}}">
+                   href="{{ route('home') }}">
                     <img class="mobile-logo-img __inline-12"
-                         src="{{ getStorageImages(path: $web_config['mob_logo'], type: 'logo') }}"
-                         alt="{{$web_config['name']->value}}"/>
+                         src="{{ getStorageImages(path: $web_config['mob_logo'] ?? null, type: 'logo') }}"
+                         alt="{{ $web_config['name']->value ?? 'Logo' }}"/>
                 </a>
 
                 <div class="input-group-overlay mx-lg-4 search-form-mobile text-align-direction">
-                    <form action="{{route('products')}}" type="submit" class="search_form">
+                    <form action="{{ route('products') }}" type="submit" class="search_form">
                         <div class="d-flex align-items-center gap-2">
                             <input class="form-control appended-form-control search-bar-input" type="search"
                                    autocomplete="off" data-given-value=""
-                                   placeholder="{{ translate("search_for_items")}}..."
+                                   placeholder="{{ translate('search_for_items') }}..."
                                    name="name" value="{{ request('name') }}">
 
                             <button class="input-group-append-overlay search_button d-none d-md-block" type="submit">
@@ -132,16 +159,16 @@
                             <i class="navbar-tool-icon czi-close close-icon"></i>
                         </div>
                     </a>
-                    <div class="navbar-tool open-search-form-mobile d-lg-none {{Session::get('direction') === "rtl" ? 'mr-md-3' : 'ml-md-3'}}">
+                    <div class="navbar-tool open-search-form-mobile d-lg-none {{ Session::get('direction') === 'rtl' ? 'mr-md-3' : 'ml-md-3' }}">
                         <a class="navbar-tool-icon-box bg-secondary" href="javascript:">
                             <i class="tio-search"></i>
                         </a>
                     </div>
-                    <div class="navbar-tool dropdown d-none d-md-block {{Session::get('direction') === "rtl" ? 'mr-md-3' : 'ml-md-3'}}">
-                        <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{{route('wishlists')}}">
+                    <div class="navbar-tool dropdown d-none d-md-block {{ Session::get('direction') === 'rtl' ? 'mr-md-3' : 'ml-md-3' }}">
+                        <a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="{{ route('wishlists') }}">
                             <span class="navbar-tool-label">
                                 <span class="countWishlist">
-                                    {{session()->has('wish_list')?count(session('wish_list')):0}}
+                                    {{ session()->has('wish_list') ? count(session('wish_list')) : 0 }}
                                 </span>
                            </span>
                             <i class="navbar-tool-icon czi-heart"></i>
@@ -154,28 +181,28 @@
                                 <div class="navbar-tool-icon-box bg-secondary">
                                     <div class="navbar-tool-icon-box bg-secondary">
                                         <img class="img-profile rounded-circle __inline-14" alt=""
-                                             src="{{ getStorageImages(path: auth('customer')->user()->image_full_url, type: 'avatar') }}">
+                                             src="{{ getStorageImages(path: auth('customer')->user()->image_full_url ?? null, type: 'avatar') }}">
                                     </div>
                                 </div>
                                 <div class="navbar-tool-text">
-                                    <small>{{ translate('hello')}}, {{auth('customer')->user()->f_name}}</small>
-                                    {{ translate('dashboard')}}
+                                    <small>{{ translate('hello') }}, {{ auth('customer')->user()->f_name ?? '' }}</small>
+                                    {{ translate('dashboard') }}
                                 </div>
                             </a>
-                            <div class="dropdown-menu dropdown-menu-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}"
+                            <div class="dropdown-menu dropdown-menu-{{ Session::get('direction') === 'rtl' ? 'left' : 'right' }}"
                                  aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item"
-                                   href="{{route('account-oder')}}"> {{ translate('my_Order')}} </a>
+                                   href="{{ route('account-oder') }}"> {{ translate('my_Order') }} </a>
                                 <a class="dropdown-item"
-                                   href="{{route('user-account')}}"> {{ translate('my_Profile')}}</a>
+                                   href="{{ route('user-account') }}"> {{ translate('my_Profile') }}</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item"
-                                   href="{{route('customer.auth.logout')}}">{{ translate('logout')}}</a>
+                                   href="{{ route('customer.auth.logout') }}">{{ translate('logout') }}</a>
                             </div>
                         </div>
                     @else
                         <div class="dropdown">
-                            <a class="navbar-tool {{Session::get('direction') === "rtl" ? 'mr-md-3' : 'ml-md-3'}}"
+                            <a class="navbar-tool {{ Session::get('direction') === 'rtl' ? 'mr-md-3' : 'ml-md-3' }}"
                                type="button" data-toggle="dropdown" aria-haspopup="true"
                                aria-expanded="false">
                                 <div class="navbar-tool-icon-box bg-secondary">
@@ -189,14 +216,14 @@
                                     </div>
                                 </div>
                             </a>
-                            <div class="text-align-direction dropdown-menu __auth-dropdown dropdown-menu-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}"
+                            <div class="text-align-direction dropdown-menu __auth-dropdown dropdown-menu-{{ Session::get('direction') === 'rtl' ? 'left' : 'right' }}"
                                  aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="{{route('customer.auth.login')}}">
-                                    <i class="fa fa-sign-in mr-2"></i> {{ translate('sign_in')}}
+                                <a class="dropdown-item" href="{{ route('customer.auth.login') }}">
+                                    <i class="fa fa-sign-in mr-2"></i> {{ translate('sign_in') }}
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{{route('customer.auth.sign-up')}}">
-                                    <i class="fa fa-user-circle mr-2"></i>{{ translate('sign_up')}}
+                                <a class="dropdown-item" href="{{ route('customer.auth.sign-up') }}">
+                                    <i class="fa fa-user-circle mr-2"></i>{{ translate('sign_up') }}
                                 </a>
                             </div>
                         </div>
@@ -218,15 +245,22 @@
                     </div>
 
                     <ul class="navbar-nav d-block d-md-none">
-                        <li class="nav-item dropdown {{request()->is('/')?'active':''}}">
-                            <a class="nav-link" href="{{route('home')}}">{{ translate('home')}}</a>
+                        <li class="nav-item dropdown {{ request()->is('/') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('home') }}">{{ translate('home') }}</a>
                         </li>
                     </ul>
 
-                    @php($categories = \App\Utils\CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting(dataLimit: 11))
+                    @php
+                        $categories = collect([]);
+                        try {
+                            $categories = \App\Utils\CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting(dataLimit: 11);
+                        } catch (\Exception $e) {
+                            $categories = collect([]);
+                        }
+                    @endphp
 
                     <ul class="navbar-nav mega-nav pr-lg-2 pl-lg-2 mr-2 d-none d-md-block __mega-nav">
-                        <li class="nav-item {{!request()->is('/')?'dropdown':''}}">
+                        <li class="nav-item {{ !request()->is('/') ? 'dropdown' : '' }}">
 
                             <a class="nav-link dropdown-toggle category-menu-toggle-btn ps-0"
                                href="javascript:">
@@ -237,7 +271,7 @@
                                           fill="currentColor"/>
                                 </svg>
                                 <span class="category-menu-toggle-btn-text">
-                                    {{ translate('categories')}}
+                                    {{ translate('categories') }}
                                 </span>
                             </a>
                         </li>
@@ -249,45 +283,45 @@
                                href="javascript:" data-toggle="dropdown">
                                 <i class="czi-menu align-middle mt-n1 me-2"></i>
                                 <span class="me-4">
-                                    {{ translate('categories')}}
+                                    {{ translate('categories') }}
                                 </span>
                             </a>
                             <ul class="dropdown-menu __dropdown-menu-2 text-align-direction">
-                                @php($categoryIndex=0)
+                                @php($categoryIndex = 0)
                                 @foreach($categories as $category)
                                     @php($categoryIndex++)
                                     @if($categoryIndex < 10)
                                         <li class="dropdown">
 
-                                            <a <?php if ($category->childes->count() > 0) echo "" ?>
-                                               href="{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}">
-                                                <span>{{$category['name']}}</span>
+                                            <a <?php if (isset($category->childes) && $category->childes->count() > 0) echo "" ?>
+                                               href="{{ route('products', ['id' => $category['id'], 'data_from' => 'category', 'page' => 1]) }}">
+                                                <span>{{ $category['name'] ?? '' }}</span>
 
                                             </a>
-                                            @if ($category->childes->count() > 0)
+                                            @if (isset($category->childes) && $category->childes->count() > 0)
                                                 <a data-toggle='dropdown' class='__ml-50px'>
-                                                    <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} __inline-16"></i>
+                                                    <i class="czi-arrow-{{ Session::get('direction') === 'rtl' ? 'left' : 'right' }} __inline-16"></i>
                                                 </a>
                                             @endif
 
-                                            @if($category->childes->count()>0)
+                                            @if(isset($category->childes) && $category->childes->count() > 0)
                                                 <ul class="dropdown-menu text-align-direction">
-                                                    @foreach($category['childes'] as $subCategory)
+                                                    @foreach($category['childes'] ?? [] as $subCategory)
                                                         <li class="dropdown">
-                                                            <a href="{{route('products',['id'=> $subCategory['id'],'data_from'=>'category','page'=>1])}}">
-                                                                <span>{{$subCategory['name']}}</span>
+                                                            <a href="{{ route('products', ['id' => $subCategory['id'], 'data_from' => 'category', 'page' => 1]) }}">
+                                                                <span>{{ $subCategory['name'] ?? '' }}</span>
                                                             </a>
 
-                                                            @if($subCategory->childes->count()>0)
+                                                            @if(isset($subCategory->childes) && $subCategory->childes->count() > 0)
                                                                 <a class="header-subcategories-links"
                                                                    data-toggle='dropdown'>
-                                                                    <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} __inline-16"></i>
+                                                                    <i class="czi-arrow-{{ Session::get('direction') === 'rtl' ? 'left' : 'right' }} __inline-16"></i>
                                                                 </a>
                                                                 <ul class="dropdown-menu">
-                                                                    @foreach($subCategory['childes'] as $subSubCategory)
+                                                                    @foreach($subCategory['childes'] ?? [] as $subSubCategory)
                                                                         <li>
                                                                             <a class="dropdown-item"
-                                                                               href="{{route('products',['id'=> $subSubCategory['id'],'data_from'=>'category','page'=>1])}}">{{$subSubCategory['name']}}</a>
+                                                                               href="{{ route('products', ['id' => $subSubCategory['id'], 'data_from' => 'category', 'page' => 1]) }}">{{ $subSubCategory['name'] ?? '' }}</a>
                                                                         </li>
                                                                     @endforeach
                                                                 </ul>
@@ -311,28 +345,36 @@
                     </ul>
 
                     <ul class="navbar-nav">
-                        <li class="nav-item dropdown d-none d-md-block {{request()->is('/')?'active':''}}">
-                            <a class="nav-link" href="{{route('home')}}">{{ translate('home')}}</a>
+                        <li class="nav-item dropdown d-none d-md-block {{ request()->is('/') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('home') }}">{{ translate('home') }}</a>
                         </li>
 
                         @if(getWebConfig(name: 'product_brand'))
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#"
                                    data-toggle="dropdown">{{ translate('brand') }}</a>
-                                <ul class="text-align-direction dropdown-menu __dropdown-menu-sizing dropdown-menu-{{Session::get('direction') === "rtl" ? 'right' : 'left'}} scroll-bar">
-                                    @php($brandIndex=0)
-                                    @foreach(\App\Utils\BrandManager::getActiveBrandWithCountingAndPriorityWiseSorting() as $brand)
+                                <ul class="text-align-direction dropdown-menu __dropdown-menu-sizing dropdown-menu-{{ Session::get('direction') === 'rtl' ? 'right' : 'left' }} scroll-bar">
+                                    @php
+                                        $brands = collect([]);
+                                        try {
+                                            $brands = \App\Utils\BrandManager::getActiveBrandWithCountingAndPriorityWiseSorting();
+                                        } catch (\Exception $e) {
+                                            $brands = collect([]);
+                                        }
+                                        $brandIndex = 0;
+                                    @endphp
+                                    @foreach($brands as $brand)
                                         @php($brandIndex++)
                                         @if($brandIndex < 10)
                                             <li class="__inline-17">
                                                 <div>
                                                     <a class="dropdown-item"
-                                                       href="{{route('products',['id'=> $brand['id'],'data_from'=>'brand','page'=>1])}}">
-                                                        {{$brand['name']}}
+                                                       href="{{ route('products', ['id' => $brand['id'] ?? 0, 'data_from' => 'brand', 'page' => 1]) }}">
+                                                        {{ $brand['name'] ?? '' }}
                                                     </a>
                                                 </div>
                                                 <div class="align-baseline">
-                                                    @if($brand['brand_products_count'] > 0 )
+                                                    @if(isset($brand['brand_products_count']) && $brand['brand_products_count'] > 0)
                                                         <span class="count-value px-2">( {{ $brand['brand_products_count'] }} )</span>
                                                     @endif
                                                 </div>
@@ -341,7 +383,7 @@
                                     @endforeach
                                     <li class="__inline-17">
                                         <div>
-                                            <a class="dropdown-item web-text-primary" href="{{route('brands')}}">
+                                            <a class="dropdown-item web-text-primary" href="{{ route('brands') }}">
                                                 {{ translate('view_more') }}
                                             </a>
                                         </div>
@@ -359,42 +401,42 @@
                                 $discount_product = 0;
                             }
                         @endphp
-                        @if ($discount_product>0)
-                            <li class="nav-item dropdown {{request()->is('/')?'active':''}}">
+                        @if ($discount_product > 0)
+                            <li class="nav-item dropdown {{ request()->is('/') ? 'active' : '' }}">
                                 <a class="nav-link text-capitalize"
-                                   href="{{route('products',['data_from'=>'discounted','page'=>1])}}">{{ translate('discounted_products')}}</a>
+                                   href="{{ route('products', ['data_from' => 'discounted', 'page' => 1]) }}">{{ translate('discounted_products') }}</a>
                             </li>
                         @endif
 
                         @php($businessMode = getWebConfig(name: 'business_mode'))
                         @if ($businessMode == 'multi')
-                            <li class="nav-item dropdown {{request()->is('/')?'active':''}}">
+                            <li class="nav-item dropdown {{ request()->is('/') ? 'active' : '' }}">
                                 <a class="nav-link text-capitalize"
-                                   href="{{route('vendors')}}">{{ translate('all_vendors')}}</a>
+                                   href="{{ route('vendors') }}">{{ translate('all_vendors') }}</a>
                             </li>
                         @endif
 
                         @if(auth('customer')->check())
                             <li class="nav-item d-md-none">
-                                <a href="{{route('user-account')}}" class="nav-link text-capitalize">
-                                    {{ translate('user_profile')}}
+                                <a href="{{ route('user-account') }}" class="nav-link text-capitalize">
+                                    {{ translate('user_profile') }}
                                 </a>
                             </li>
                             <li class="nav-item d-md-none">
-                                <a href="{{route('wishlists')}}" class="nav-link">
-                                    {{ translate('Wishlist')}}
+                                <a href="{{ route('wishlists') }}" class="nav-link">
+                                    {{ translate('Wishlist') }}
                                 </a>
                             </li>
                         @else
                             <li class="nav-item d-md-none">
-                                <a class="dropdown-item pl-2" href="{{route('customer.auth.login')}}">
-                                    <i class="fa fa-sign-in mr-2"></i> {{ translate('sign_in')}}
+                                <a class="dropdown-item pl-2" href="{{ route('customer.auth.login') }}">
+                                    <i class="fa fa-sign-in mr-2"></i> {{ translate('sign_in') }}
                                 </a>
                                 <div class="dropdown-divider"></div>
                             </li>
                             <li class="nav-item d-md-none">
-                                <a class="dropdown-item pl-2" href="{{route('customer.auth.sign-up')}}">
-                                    <i class="fa fa-user-circle mr-2"></i>{{ translate('sign_up')}}
+                                <a class="dropdown-item pl-2" href="{{ route('customer.auth.sign-up') }}">
+                                    <i class="fa fa-user-circle mr-2"></i>{{ translate('sign_up') }}
                                 </a>
                             </li>
                         @endif
@@ -406,16 +448,16 @@
                                         <button class="btn dropdown-toggle text-white text-max-md-dark text-capitalize ps-2"
                                                 type="button" id="dropdownMenuButton"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            {{ translate('vendor_zone')}}
+                                            {{ translate('vendor_zone') }}
                                         </button>
                                         <div class="dropdown-menu __dropdown-menu-3 __min-w-165px text-align-direction"
                                              aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item text-capitalize" href="{{route('vendor.auth.registration.index')}}">
-                                                {{ translate('become_a_vendor')}}
+                                            <a class="dropdown-item text-capitalize" href="{{ route('vendor.auth.registration.index') }}">
+                                                {{ translate('become_a_vendor') }}
                                             </a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="{{route('vendor.auth.login')}}">
-                                                {{ translate('vendor_login')}}
+                                            <a class="dropdown-item" href="{{ route('vendor.auth.login') }}">
+                                                {{ translate('vendor_login') }}
                                             </a>
                                         </div>
                                     </div>
@@ -426,8 +468,8 @@
                     @if(auth('customer')->check())
                         <div class="logout-btn mt-auto d-md-none">
                             <hr>
-                            <a href="{{route('customer.auth.logout')}}" class="nav-link">
-                                <strong class="text-base">{{ translate('logout')}}</strong>
+                            <a href="{{ route('customer.auth.logout') }}" class="nav-link">
+                                <strong class="text-base">{{ translate('logout') }}</strong>
                             </a>
                         </div>
                     @endif
@@ -439,20 +481,20 @@
             <div class="container">
                 <div class="category-menu-wrap">
                     <ul class="category-menu">
-                        @foreach ($categories as $key=>$category)
+                        @foreach ($categories as $key => $category)
                             <li>
-                                <a href="{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}">{{$category->name}}</a>
-                                @if ($category->childes->count() > 0)
+                                <a href="{{ route('products', ['id' => $category['id'] ?? 0, 'data_from' => 'category', 'page' => 1]) }}">{{ $category->name ?? '' }}</a>
+                                @if (isset($category->childes) && $category->childes->count() > 0)
                                     <div class="mega_menu z-2">
                                         @foreach ($category->childes as $sub_category)
                                             <div class="mega_menu_inner">
                                                 <h6>
-                                                    <a href="{{route('products',['id'=> $sub_category['id'],'data_from'=>'category','page'=>1])}}">{{$sub_category->name}}</a>
+                                                    <a href="{{ route('products', ['id' => $sub_category['id'] ?? 0, 'data_from' => 'category', 'page' => 1]) }}">{{ $sub_category->name ?? '' }}</a>
                                                 </h6>
-                                                @if ($sub_category->childes->count() >0)
+                                                @if (isset($sub_category->childes) && $sub_category->childes->count() > 0)
                                                     @foreach ($sub_category->childes as $sub_sub_category)
                                                         <div>
-                                                            <a href="{{route('products',['id'=> $sub_sub_category['id'],'data_from'=>'category','page'=>1])}}">{{$sub_sub_category->name}}</a>
+                                                            <a href="{{ route('products', ['id' => $sub_sub_category['id'] ?? 0, 'data_from' => 'category', 'page' => 1]) }}">{{ $sub_sub_category->name ?? '' }}</a>
                                                         </div>
                                                     @endforeach
                                                 @endif
@@ -463,7 +505,7 @@
                             </li>
                         @endforeach
                         <li class="text-center">
-                            <a href="{{route('categories')}}" class="text-primary font-weight-bold justify-content-center">
+                            <a href="{{ route('categories') }}" class="text-primary font-weight-bold justify-content-center">
                                 {{ translate('View_All') }}
                             </a>
                         </li>
@@ -480,6 +522,7 @@
 
         $(".category-menu").find(".mega_menu").parents("li")
             .addClass("has-sub-item").find("> a")
-            .append("<i class='czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}}'></i>");
+            .append("<i class='czi-arrow-{{ Session::get('direction') === 'rtl' ? 'left' : 'right' }}'></i>");
     </script>
 @endpush
+
