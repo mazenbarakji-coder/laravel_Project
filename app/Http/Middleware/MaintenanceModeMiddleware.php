@@ -18,7 +18,7 @@ class MaintenanceModeMiddleware
     public function handle($request, Closure $next)
     {
         try {
-            $maintenance_mode = Helpers::get_business_settings('maintenance_mode') ?? 0;
+        $maintenance_mode = Helpers::get_business_settings('maintenance_mode') ?? 0;
         } catch (\Exception $e) {
             // Table doesn't exist yet, default to off
             $maintenance_mode = 0;

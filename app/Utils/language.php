@@ -88,11 +88,11 @@ if (!function_exists('getDefaultLanguage')) {
             $direction = 'ltr';
             
             if (is_array($data) && !empty($data)) {
-                foreach ($data as $ln) {
+            foreach ($data as $ln) {
                     if (is_array($ln) && array_key_exists('default', $ln) && $ln['default']) {
                         $code = $ln['code'] ?? 'en';
-                        if (array_key_exists('direction', $ln)) {
-                            $direction = $ln['direction'];
+                    if (array_key_exists('direction', $ln)) {
+                        $direction = $ln['direction'];
                         }
                     }
                 }
@@ -111,7 +111,7 @@ if (!function_exists('getLanguageName')) {
     {
         $values = getWebConfig('language');
         if (is_array($values) && !empty($values)) {
-            foreach ($values as $value) {
+        foreach ($values as $value) {
                 if (is_array($value) && isset($value['code']) && $value['code'] == $key) {
                     $key = $value['name'] ?? $key;
                     break;

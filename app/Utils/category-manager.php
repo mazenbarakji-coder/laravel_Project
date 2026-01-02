@@ -75,21 +75,21 @@ class CategoryManager
                 return collect([]);
             }
 
-            $categories = Category::with(['product' => function ($query) {
-                    return $query->active()->withCount(['orderDetails']);
-                }])->withCount(['product' => function ($query) {
-                    $query->active();
-                }])->with(['childes' => function ($query) {
-                $query->with(['childes' => function ($query) {
-                    $query->withCount(['subSubCategoryProduct'])->where('position', 2);
-                }])->withCount(['subCategoryProduct'])->where('position', 1);
-            }, 'childes.childes'])->where('position', 0);
+        $categories = Category::with(['product' => function ($query) {
+                return $query->active()->withCount(['orderDetails']);
+            }])->withCount(['product' => function ($query) {
+                $query->active();
+            }])->with(['childes' => function ($query) {
+            $query->with(['childes' => function ($query) {
+                $query->withCount(['subSubCategoryProduct'])->where('position', 2);
+            }])->withCount(['subCategoryProduct'])->where('position', 1);
+        }, 'childes.childes'])->where('position', 0);
 
-            $categoriesProcessed = self::getPriorityWiseCategorySortQuery(query: $categories->get());
-            if ($dataLimit) {
-                $categoriesProcessed = $categoriesProcessed->paginate($dataLimit);
-            }
-            return $categoriesProcessed;
+        $categoriesProcessed = self::getPriorityWiseCategorySortQuery(query: $categories->get());
+        if ($dataLimit) {
+            $categoriesProcessed = $categoriesProcessed->paginate($dataLimit);
+        }
+        return $categoriesProcessed;
         } catch (\Exception $e) {
             // Table doesn't exist or query failed, return empty collection
             return collect([]);

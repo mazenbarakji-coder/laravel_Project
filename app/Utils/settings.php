@@ -16,21 +16,21 @@ if (!function_exists('getWebConfig')) {
         } else {
             try {
                 if (Schema::hasTable('business_settings')) {
-                    $data = BusinessSetting::where(['type' => $name])->first();
-                    if (isset($data)) {
-                        $arrayOfCompaniesValue = ['company_web_logo', 'company_mobile_logo', 'company_footer_logo', 'company_fav_icon', 'loader_gif'];
-                        $arrayOfBanner = ['shop_banner', 'offer_banner', 'bottom_banner'];
-                        $mergeArray = array_merge($arrayOfCompaniesValue, $arrayOfBanner);
-                        $config = json_decode($data['value'], true);
-                        if (in_array($name, $mergeArray)) {
-                            $folderName = in_array($name, $arrayOfCompaniesValue) ? 'company' : 'shop';
-                            $value = isset($config['image_name']) ? $config : ['image_name' => $data['value'], 'storage' => 'public'];
-                            $config = storageLink($folderName, $value['image_name'], $value['storage']);
-                        }
-                        if (is_null($config)) {
-                            $config = $data['value'];
-                        }
-                    }
+            $data = BusinessSetting::where(['type' => $name])->first();
+            if (isset($data)) {
+                $arrayOfCompaniesValue = ['company_web_logo', 'company_mobile_logo', 'company_footer_logo', 'company_fav_icon', 'loader_gif'];
+                $arrayOfBanner = ['shop_banner', 'offer_banner', 'bottom_banner'];
+                $mergeArray = array_merge($arrayOfCompaniesValue, $arrayOfBanner);
+                $config = json_decode($data['value'], true);
+                if (in_array($name, $mergeArray)) {
+                    $folderName = in_array($name, $arrayOfCompaniesValue) ? 'company' : 'shop';
+                    $value = isset($config['image_name']) ? $config : ['image_name' => $data['value'], 'storage' => 'public'];
+                    $config = storageLink($folderName, $value['image_name'], $value['storage']);
+                }
+                if (is_null($config)) {
+                    $config = $data['value'];
+                }
+            }
                 }
             } catch (\Exception $e) {
                 // Table doesn't exist yet, return null

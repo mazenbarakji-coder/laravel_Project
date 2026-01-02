@@ -1314,21 +1314,21 @@ class ProductManager
 
         try {
             if (Schema::hasTable('flash_deals') && Schema::hasTable('flash_deal_products')) {
-                $flashDeal = FlashDeal::where(['deal_type' => 'flash_deal', 'status' => 1])
-                    ->when($id, function ($query) use ($id) {
-                        return $query->where(['id' => $id]);
-                    })
-                    ->whereDate('start_date', '<=', date('Y-m-d'))
-                    ->whereDate('end_date', '>=', date('Y-m-d'))
-                    ->withCount(['products'])
-                    ->first();
+        $flashDeal = FlashDeal::where(['deal_type' => 'flash_deal', 'status' => 1])
+            ->when($id, function ($query) use ($id) {
+                return $query->where(['id' => $id]);
+            })
+            ->whereDate('start_date', '<=', date('Y-m-d'))
+            ->whereDate('end_date', '>=', date('Y-m-d'))
+            ->withCount(['products'])
+            ->first();
 
                 if ($flashDeal && Schema::hasTable('products')) {
-                    $flashDealProducts = ProductManager::getPriorityWiseFlashDealsProductsQuerySorting(
-                        query: Product::active(),
-                        flashDeal: $flashDeal,
-                        userId: $userId,
-                    );
+            $flashDealProducts = ProductManager::getPriorityWiseFlashDealsProductsQuerySorting(
+                query: Product::active(),
+                flashDeal: $flashDeal,
+                userId: $userId,
+            );
                 }
             }
         } catch (\Exception $e) {

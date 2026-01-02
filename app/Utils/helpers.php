@@ -167,12 +167,12 @@ class Helpers
         } else {
             try {
                 if (Schema::hasTable('business_settings')) {
-                    $data = BusinessSetting::where(['type' => $name])->first();
-                    if (isset($data)) {
-                        $config = json_decode($data['value'], true);
-                        if (is_null($config)) {
-                            $config = $data['value'];
-                        }
+            $data = BusinessSetting::where(['type' => $name])->first();
+            if (isset($data)) {
+                $config = json_decode($data['value'], true);
+                if (is_null($config)) {
+                    $config = $data['value'];
+                }
                     }
                 }
             } catch (\Exception $e) {
@@ -1412,11 +1412,11 @@ if (!function_exists('get_business_settings')) {
             try {
                 if (\Illuminate\Support\Facades\Schema::hasTable('business_settings')) {
                     $data = \App\Models\BusinessSetting::where(['type' => $name])->first();
-                    if (isset($data)) {
-                        $config = json_decode($data['value'], true);
-                        if (is_null($config)) {
-                            $config = $data['value'];
-                        }
+            if (isset($data)) {
+                $config = json_decode($data['value'], true);
+                if (is_null($config)) {
+                    $config = $data['value'];
+                }
                     }
                 }
             } catch (\Exception $e) {
