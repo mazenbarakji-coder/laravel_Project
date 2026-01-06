@@ -203,7 +203,10 @@
     </a>
 </div>
 
-<script src="{{ theme_asset(path: 'public/assets/front-end/vendor/jquery/dist/jquery-2.2.4.min.js') }}"></script>
+{{-- jQuery - Load first (required by all plugins) --}}
+<script src="{{ asset('assets/front-end/vendor/jquery/dist/jquery-2.2.4.min.js') }}"></script>
+
+{{-- Bootstrap and other vendor scripts - Load after jQuery --}}
 <script src="{{ theme_asset(path: 'public/assets/front-end/vendor/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ theme_asset(path: 'public/assets/front-end/vendor/bs-custom-file-input/dist/bs-custom-file-input.min.js') }}"></script>
 <script src="{{ theme_asset(path: 'public/assets/front-end/vendor/simplebar/dist/simplebar.min.js') }}"></script>
@@ -213,107 +216,146 @@
 <script src="{{ theme_asset(path: 'public/assets/front-end/vendor/drift-zoom/dist/Drift.min.js') }}"></script>
 <script src="{{ theme_asset(path: 'public/assets/front-end/vendor/lightgallery.js/dist/js/lightgallery.min.js') }}"></script>
 <script src="{{ theme_asset(path: 'public/assets/front-end/vendor/lg-video.js/dist/lg-video.min.js') }}"></script>
+
+{{-- Plugins that depend on jQuery - Load after jQuery and Bootstrap --}}
 <script src="{{ theme_asset(path: 'public/assets/front-end/js/owl.carousel.min.js')}}"></script>
 <script src="{{ theme_asset(path: "public/assets/back-end/js/toastr.js" )}}"></script>
 <script src="{{ theme_asset(path: 'public/assets/front-end/js/theme.js') }}"></script>
 <script src="{{ theme_asset(path: 'public/assets/front-end/js/slick.js') }}"></script>
 <script src="{{ theme_asset(path: 'public/assets/front-end/js/sweet_alert.js') }}"></script>
-<script src="{{ theme_asset(path: "public/assets/back-end/js/toastr.js") }}"></script>
+
+{{-- Custom scripts - Load last --}}
 <script src="{{ theme_asset(path: 'public/assets/front-end/js/custom.js') }}"></script>
 
 {!! Toastr::message() !!}
 
 <script>
     "use strict";
-
-    @if(Request::is('/') &&  \Illuminate\Support\Facades\Cookie::has('popup_banner')==false)
-    $(document).ready(function () {
-        $('#popup-modal').modal('show');
-    });
-    @php(\Illuminate\Support\Facades\Cookie::queue('popup_banner', 'off', 1))
-    @endif
-
-    @if ($errors->any())
-    @foreach($errors->all() as $error)
-    toastr.error('{{$error}}', Error, {
-        CloseButton: true,
-        ProgressBar: true
-    });
-    @endforeach
-    @endif
-
-    $(document).mouseup(function (e) {
-        let container = $(".search-card");
-        if (!container.is(e.target) && container.has(e.target).length === 0) {
-            container.hide();
-        }
-    });
-
-    function route_alert(route, message) {
-        Swal.fire({
-            title: '{{ translate("are_you_sure")}}?',
-            text: message,
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonColor: 'default',
-            confirmButtonColor: '{{$web_config['primary_color']}}',
-            cancelButtonText: '{{ translate("no")}}',
-            confirmButtonText: '{{ translate("yes")}}',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-                location.href = route;
+    
+    // Wait for jQuery to be fully loaded before executing code
+    (function() {
+        function initJQueryCode() {
+            if (typeof jQuery === 'undefined' || typeof $ === 'undefined') {
+                // jQuery not loaded yet, wait and retry
+                setTimeout(initJQueryCode, 50);
+                return;
             }
-        })
-    }
 
-    @php($cookie = $web_config['cookie_setting'] ? json_decode($web_config['cookie_setting']['value'], true):null)
-    let cookie_content = `
-        <div class="cookie-section">
-            <div class="container">
-                <div class="d-flex flex-wrap align-items-center justify-content-between column-gap-4 row-gap-3">
-                    <div class="text-wrapper">
-                        <h5 class="title">{{ translate("Your_Privacy_Matter")}}</h5>
-                        <div>{{ $cookie ? $cookie['cookie_text'] : '' }}</div>
-                    </div>
-                    <div class="btn-wrapper">
-                        <button class="btn bg-dark text-white cursor-pointer" id="cookie-reject">{{ translate("no_thanks")}}</button>
-                        <button class="btn btn-success cookie-accept" id="cookie-accept">{{ translate('i_Accept')}}</button>
+            var $ = jQuery;
+
+            @if(Request::is('/') &&  \Illuminate\Support\Facades\Cookie::has('popup_banner')==false)
+            $(document).ready(function () {
+                $('#popup-modal').modal('show');
+            });
+            @php(\Illuminate\Support\Facades\Cookie::queue('popup_banner', 'off', 1))
+            @endif
+
+            @if ($errors->any())
+            @foreach($errors->all() as $error)
+            if (typeof toastr !== 'undefined') {
+                toastr.error('{{$error}}', Error, {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+            }
+            @endforeach
+            @endif
+
+            $(document).mouseup(function (e) {
+                let container = $(".search-card");
+                if (!container.is(e.target) && container.has(e.target).length === 0) {
+                    container.hide();
+                }
+            });
+
+            function route_alert(route, message) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: '{{ translate("are_you_sure")}}?',
+                        text: message,
+                        type: 'warning',
+                        showCancelButton: true,
+                        cancelButtonColor: 'default',
+                        confirmButtonColor: '{{$web_config['primary_color']}}',
+                        cancelButtonText: '{{ translate("no")}}',
+                        confirmButtonText: '{{ translate("yes")}}',
+                        reverseButtons: true
+                    }).then((result) => {
+                        if (result.value) {
+                            location.href = route;
+                        }
+                    })
+                } else {
+                    if (confirm(message)) {
+                        location.href = route;
+                    }
+                }
+            }
+
+            @php($cookie = $web_config['cookie_setting'] ? json_decode($web_config['cookie_setting']['value'], true):null)
+            let cookie_content = `
+                <div class="cookie-section">
+                    <div class="container">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between column-gap-4 row-gap-3">
+                            <div class="text-wrapper">
+                                <h5 class="title">{{ translate("Your_Privacy_Matter")}}</h5>
+                                <div>{{ $cookie ? $cookie['cookie_text'] : '' }}</div>
+                            </div>
+                            <div class="btn-wrapper">
+                                <button class="btn bg-dark text-white cursor-pointer" id="cookie-reject">{{ translate("no_thanks")}}</button>
+                                <button class="btn btn-success cookie-accept" id="cookie-accept">{{ translate('i_Accept')}}</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    `;
-    $(document).on('click','#cookie-accept',function() {
-        document.cookie = '6valley_cookie_consent=accepted; max-age=' + 60 * 60 * 24 * 30;
-        $('#cookie-section').hide();
-    });
-    $(document).on('click','#cookie-reject',function() {
-        document.cookie = '6valley_cookie_consent=reject; max-age=' + 60 * 60 * 24;
-        $('#cookie-section').hide();
-    });
+            `;
+            $(document).on('click','#cookie-accept',function() {
+                document.cookie = '6valley_cookie_consent=accepted; max-age=' + 60 * 60 * 24 * 30;
+                $('#cookie-section').hide();
+            });
+            $(document).on('click','#cookie-reject',function() {
+                document.cookie = '6valley_cookie_consent=reject; max-age=' + 60 * 60 * 24;
+                $('#cookie-section').hide();
+            });
 
-    $(document).ready(function() {
-        if (document.cookie.indexOf("6valley_cookie_consent=accepted") !== -1) {
-            $('#cookie-section').hide();
-        }else{
-            $('#cookie-section').html(cookie_content).show();
+            $(document).ready(function() {
+                if (document.cookie.indexOf("6valley_cookie_consent=accepted") !== -1) {
+                    $('#cookie-section').hide();
+                }else{
+                    $('#cookie-section').html(cookie_content).show();
+                }
+            });
         }
-    });
+        
+        // Start initialization
+        initJQueryCode();
+    })();
 </script>
 @if(env('APP_MODE') == 'demo')
     <script>
         'use strict'
-        function checkDemoResetTime() {
-            let currentMinute = new Date().getMinutes();
-            if (currentMinute > 55 && currentMinute <= 60) {
-                $('#demo-reset-warning').addClass('active');
-            } else {
-                $('#demo-reset-warning').removeClass('active');
+        (function() {
+            function initDemoCode() {
+                if (typeof jQuery === 'undefined' || typeof $ === 'undefined') {
+                    setTimeout(initDemoCode, 50);
+                    return;
+                }
+                
+                var $ = jQuery;
+                
+                function checkDemoResetTime() {
+                    let currentMinute = new Date().getMinutes();
+                    if (currentMinute > 55 && currentMinute <= 60) {
+                        $('#demo-reset-warning').addClass('active');
+                    } else {
+                        $('#demo-reset-warning').removeClass('active');
+                    }
+                }
+                checkDemoResetTime();
+                setInterval(checkDemoResetTime, 60000);
             }
-        }
-        checkDemoResetTime();
-        setInterval(checkDemoResetTime, 60000);
+            initDemoCode();
+        })();
     </script>
 @endif
 

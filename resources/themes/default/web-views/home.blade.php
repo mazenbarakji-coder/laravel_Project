@@ -220,7 +220,7 @@
 @endsection
 
 @push('script')
-    <script src="{{theme_asset(path: 'public/assets/front-end/js/owl.carousel.min.js')}}"></script>
+    {{-- owl.carousel.min.js is already loaded in the layout file, no need to load again --}}
     <script src="{{ theme_asset(path: 'public/assets/front-end/js/home.js') }}"></script>
 @endpush
 
