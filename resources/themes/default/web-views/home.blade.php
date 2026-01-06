@@ -24,7 +24,7 @@
             $decimalPointSettings = !empty(getWebConfig(name: 'decimal_point_settings')) ? getWebConfig(name: 'decimal_point_settings') : 0;
         @endphp
         
-        @include('web-views.partials._home-top-slider',['main_banner'=>$main_banner])
+        @include('web-views.partials._home-top-slider')
 
         @if ($flashDeal['flashDeal'] && $flashDeal['flashDealProducts'])
             @include('web-views.partials._flash-deal', ['decimal_point_settings'=>$decimalPointSettings])
