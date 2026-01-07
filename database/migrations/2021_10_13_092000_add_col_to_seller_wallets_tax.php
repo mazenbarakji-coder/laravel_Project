@@ -13,9 +13,15 @@ class AddColToSellerWalletsTax extends Migration
      */
     public function up()
     {
-        Schema::table('seller_wallets', function (Blueprint $table) {
-            $table->float('total_tax_collected')->default(0);
+        // Only run if the seller_wallets table exists
+        if (Schema::hasTable('seller_wallets')) {
+                    Schema::table('seller_wallets', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('seller_wallets', 'total_tax_collected')) {
+                $table->float('total_tax_collected')->default(0);
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class AddColToSellerWalletsTax extends Migration
      */
     public function down()
     {
-        Schema::table('seller_wallets', function (Blueprint $table) {
+        // Only run if the seller_wallets table exists
+        if (Schema::hasTable('seller_wallets')) {
+                    Schema::table('seller_wallets', function (Blueprint $table) {
             //
         });
+        }
     }
 }

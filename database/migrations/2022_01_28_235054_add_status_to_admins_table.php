@@ -13,9 +13,15 @@ class AddStatusToAdminsTable extends Migration
      */
     public function up()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->boolean('status')->default(1);
+        // Only run if the admins table exists
+        if (Schema::hasTable('admins')) {
+                    Schema::table('admins', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admins', 'status')) {
+                $table->boolean('status')->default(1);
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddStatusToAdminsTable extends Migration
      */
     public function down()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->dropColumn('status');
+        // Only run if the admins table exists
+        if (Schema::hasTable('admins')) {
+                    Schema::table('admins', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admins', 'status')) {
+                $table->dropColumn('status');
+            }
         });
+        }
     }
 }

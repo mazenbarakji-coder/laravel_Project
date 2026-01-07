@@ -13,10 +13,19 @@ class ChangeColTypeSellerWallet extends Migration
      */
     public function up()
     {
-        Schema::table('seller_wallets', function (Blueprint $table) {
-            $table->float('balance')->change();
-            $table->float('withdrawn')->change();
+        // Only run if the seller_wallets table exists
+        if (Schema::hasTable('seller_wallets')) {
+                    Schema::table('seller_wallets', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('seller_wallets', 'balance')) {
+                $table->float('balance')->change();
+            }
+            // Check if column exists before changing
+            if (Schema::hasColumn('seller_wallets', 'withdrawn')) {
+                $table->float('withdrawn')->change();
+            }
         });
+        }
     }
 
     /**
@@ -26,8 +35,11 @@ class ChangeColTypeSellerWallet extends Migration
      */
     public function down()
     {
-        Schema::table('seller_wallets', function (Blueprint $table) {
+        // Only run if the seller_wallets table exists
+        if (Schema::hasTable('seller_wallets')) {
+                    Schema::table('seller_wallets', function (Blueprint $table) {
             //
         });
+        }
     }
 }

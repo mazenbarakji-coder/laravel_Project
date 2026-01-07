@@ -13,10 +13,19 @@ class AddColToUser extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_phone_verified')->default(0);
-            $table->string('temporary_token')->nullable();
+        // Only run if the users table exists
+        if (Schema::hasTable('users')) {
+                    Schema::table('users', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'is_phone_verified')) {
+                $table->boolean('is_phone_verified')->default(0);
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'temporary_token')) {
+                $table->string('temporary_token')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -26,8 +35,11 @@ class AddColToUser extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        // Only run if the users table exists
+        if (Schema::hasTable('users')) {
+                    Schema::table('users', function (Blueprint $table) {
             //
         });
+        }
     }
 }

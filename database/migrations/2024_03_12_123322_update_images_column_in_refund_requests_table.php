@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('refund_requests', function (Blueprint $table) {
-            $table->text('images')->nullable()->change();
+        // Only run if the refund_requests table exists
+        if (Schema::hasTable('refund_requests')) {
+                    Schema::table('refund_requests', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('refund_requests', 'images')) {
+                $table->text('images')->nullable()->change();
+            }
         });
+        }
     }
 
     /**
@@ -21,8 +27,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('refund_requests', function (Blueprint $table) {
-            $table->string('images')->nullable()->change();
+        // Only run if the refund_requests table exists
+        if (Schema::hasTable('refund_requests')) {
+                    Schema::table('refund_requests', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('refund_requests', 'images')) {
+                $table->string('images')->nullable()->change();
+            }
         });
+        }
     }
 };

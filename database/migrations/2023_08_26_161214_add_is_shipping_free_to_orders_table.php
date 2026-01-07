@@ -13,9 +13,15 @@ class AddIsShippingFreeToOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->boolean('is_shipping_free')->after('shipping_cost')->default(0);
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'is_shipping_free')) {
+                $table->boolean('is_shipping_free')->after('shipping_cost')->default(0);
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddIsShippingFreeToOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('is_shipping_free');
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'is_shipping_free')) {
+                $table->dropColumn('is_shipping_free');
+            }
         });
+        }
     }
 }

@@ -13,10 +13,19 @@ class AddOrderIdToReviewsTable extends Migration
      */
     public function up()
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            $table->bigInteger('order_id')->after('delivery_man_id')->nullable();
-            $table->boolean('is_saved')->after('status')->default(0);
+        // Only run if the reviews table exists
+        if (Schema::hasTable('reviews')) {
+                    Schema::table('reviews', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('reviews', 'order_id')) {
+                $table->bigInteger('order_id')->after('delivery_man_id')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('reviews', 'is_saved')) {
+                $table->boolean('is_saved')->after('status')->default(0);
+            }
         });
+        }
     }
 
     /**
@@ -26,9 +35,12 @@ class AddOrderIdToReviewsTable extends Migration
      */
     public function down()
     {
-        Schema::table('reviews', function (Blueprint $table) {
+        // Only run if the reviews table exists
+        if (Schema::hasTable('reviews')) {
+                    Schema::table('reviews', function (Blueprint $table) {
             Schema::dropIfExists('order_id');
             Schema::dropIfExists('is_saved');
         });
+        }
     }
 }

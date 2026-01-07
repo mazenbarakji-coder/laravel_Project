@@ -13,9 +13,15 @@ class ChangeColumnToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->longText('images')->change();
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+                    Schema::table('products', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('products', 'images')) {
+                $table->longText('images')->change();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class ChangeColumnToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+                    Schema::table('products', function (Blueprint $table) {
             
         });
+        }
     }
 }

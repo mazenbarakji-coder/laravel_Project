@@ -13,9 +13,15 @@ class AddUserTableEmailVerified extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_email_verified')->default(0);
+        // Only run if the users table exists
+        if (Schema::hasTable('users')) {
+                    Schema::table('users', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'is_email_verified')) {
+                $table->boolean('is_email_verified')->default(0);
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class AddUserTableEmailVerified extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
+        // Only run if the users table exists
+        if (Schema::hasTable('users')) {
+                    Schema::table('users', function (Blueprint $table) {
             //
         });
+        }
     }
 }

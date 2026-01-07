@@ -13,9 +13,15 @@ class AddDeliverymanidColumnToWithdrawRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::table('withdraw_requests', function (Blueprint $table) {
-            $table->bigInteger('delivery_man_id')->after('seller_id')->nullable();
+        // Only run if the withdraw_requests table exists
+        if (Schema::hasTable('withdraw_requests')) {
+                    Schema::table('withdraw_requests', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('withdraw_requests', 'delivery_man_id')) {
+                $table->bigInteger('delivery_man_id')->after('seller_id')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddDeliverymanidColumnToWithdrawRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::table('withdraw_requests', function (Blueprint $table) {
-            $table->dropColumn('delivery_man_id')->after('seller_id')->nullable();
+        // Only run if the withdraw_requests table exists
+        if (Schema::hasTable('withdraw_requests')) {
+                    Schema::table('withdraw_requests', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('withdraw_requests', 'delivery_man_id')) {
+                $table->dropColumn('delivery_man_id')->after('seller_id')->nullable();
+            }
         });
+        }
     }
 }

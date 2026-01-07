@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('shops', function (Blueprint $table) {
-            $table->string('slug')->default('en')->after('name');
+        // Only run if the shops table exists
+        if (Schema::hasTable('shops')) {
+                    Schema::table('shops', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shops', 'slug')) {
+                $table->string('slug')->default('en')->after('name');
+            }
         });
+        }
     }
 
     /**
@@ -21,8 +27,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('shops', function (Blueprint $table) {
-            $table->dropColumn('slug');
+        // Only run if the shops table exists
+        if (Schema::hasTable('shops')) {
+                    Schema::table('shops', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shops', 'slug')) {
+                $table->dropColumn('slug');
+            }
         });
+        }
     }
 };

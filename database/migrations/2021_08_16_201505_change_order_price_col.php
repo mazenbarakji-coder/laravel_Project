@@ -13,10 +13,18 @@ class ChangeOrderPriceCol extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->float('order_amount')->change();
-            $table->float('discount_amount')->change();
-        });
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+            Schema::table('orders', function (Blueprint $table) {
+                // Check if columns exist before changing
+                if (Schema::hasColumn('orders', 'order_amount')) {
+                    $table->float('order_amount')->change();
+                }
+                if (Schema::hasColumn('orders', 'discount_amount')) {
+                    $table->float('discount_amount')->change();
+                }
+            });
+        }
     }
 
     /**
@@ -26,8 +34,17 @@ class ChangeOrderPriceCol extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            //
-        });
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+            Schema::table('orders', function (Blueprint $table) {
+                // Revert column type changes if needed
+                if (Schema::hasColumn('orders', 'order_amount')) {
+                    // Note: Reverting float changes may require specific handling
+                }
+                if (Schema::hasColumn('orders', 'discount_amount')) {
+                    // Note: Reverting float changes may require specific handling
+                }
+            });
+        }
     }
 }

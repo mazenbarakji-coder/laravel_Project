@@ -13,9 +13,15 @@ class AddAttachmentColumnToChattingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('chattings', function (Blueprint $table) {
-            $table->json('attachment')->after('message')->nullable();
+        // Only run if the chattings table exists
+        if (Schema::hasTable('chattings')) {
+                    Schema::table('chattings', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'attachment')) {
+                $table->json('attachment')->after('message')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddAttachmentColumnToChattingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('chattings', function (Blueprint $table) {
-            $table->dropColumn('attachment');
+        // Only run if the chattings table exists
+        if (Schema::hasTable('chattings')) {
+                    Schema::table('chattings', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'attachment')) {
+                $table->dropColumn('attachment');
+            }
         });
+        }
     }
 }

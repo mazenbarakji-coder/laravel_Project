@@ -13,12 +13,27 @@ class AddColToAdminWallet extends Migration
      */
     public function up()
     {
-        Schema::table('admin_wallets', function (Blueprint $table) {
-            $table->float('commission_earned')->default(0);
-            $table->float('inhouse_sell')->default(0);
-            $table->float('delivery_charge_earned')->default(0);
-            $table->float('pending_amount')->default(0);
+        // Only run if the admin_wallets table exists
+        if (Schema::hasTable('admin_wallets')) {
+                    Schema::table('admin_wallets', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admin_wallets', 'commission_earned')) {
+                $table->float('commission_earned')->default(0);
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admin_wallets', 'inhouse_sell')) {
+                $table->float('inhouse_sell')->default(0);
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admin_wallets', 'delivery_charge_earned')) {
+                $table->float('delivery_charge_earned')->default(0);
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admin_wallets', 'pending_amount')) {
+                $table->float('pending_amount')->default(0);
+            }
         });
+        }
     }
 
     /**
@@ -28,8 +43,11 @@ class AddColToAdminWallet extends Migration
      */
     public function down()
     {
-        Schema::table('admin_wallets', function (Blueprint $table) {
+        // Only run if the admin_wallets table exists
+        if (Schema::hasTable('admin_wallets')) {
+                    Schema::table('admin_wallets', function (Blueprint $table) {
             //
         });
+        }
     }
 }

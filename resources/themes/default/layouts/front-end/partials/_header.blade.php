@@ -49,7 +49,7 @@
                         @foreach(json_decode($language['value'],true) as $data)
                             @if($data['code'] == getDefaultLanguage())
                                 <img class="mr-2" width="20"
-                                     src="{{theme_asset(path: 'public/assets/front-end/img/flags/'.$data['code'].'.png')}}"
+                                     src="{{theme_asset(path: 'public/assets/front-end/img/flags/' . $data['code'] . '.png')}}"
                                      alt="{{$data['name']}}">
                                 {{$data['name']}}
                             @endif
@@ -62,7 +62,7 @@
                                     <a class="dropdown-item pb-1" href="javascript:">
                                         <img class="mr-2"
                                              width="20"
-                                             src="{{theme_asset(path: 'public/assets/front-end/img/flags/'.$data['code'].'.png')}}"
+                                             src="{{theme_asset(path: 'public/assets/front-end/img/flags/' . $data['code'] . '.png')}}"
                                              alt="{{$data['name']}}"/>
                                         <span class="text-capitalize">{{$data['name']}}</span>
                                     </a>
@@ -223,7 +223,24 @@
                         </li>
                     </ul>
 
-                    @php($categories = \App\Utils\CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting(dataLimit: 11))
+                    @php
+                        $categories = collect([]);
+                        try {
+                            $categoriesResult = \App\Utils\CategoryManager::getCategoriesWithCountingAndPriorityWiseSorting(dataLimit: 11);
+                            // Handle both collections and paginated results
+                            if ($categoriesResult) {
+                                if (method_exists($categoriesResult, 'items')) {
+                                    // It's a paginated result
+                                    $categories = collect($categoriesResult->items());
+                                } elseif (is_iterable($categoriesResult)) {
+                                    // It's a collection or array
+                                    $categories = is_array($categoriesResult) ? collect($categoriesResult) : $categoriesResult;
+                                }
+                            }
+                        } catch (\Exception $e) {
+                            $categories = collect([]);
+                        }
+                    @endphp
 
                     <ul class="navbar-nav mega-nav pr-lg-2 pl-lg-2 mr-2 d-none d-md-block __mega-nav">
                         <li class="nav-item {{!request()->is('/')?'dropdown':''}}">
@@ -254,25 +271,29 @@
                             </a>
                             <ul class="dropdown-menu __dropdown-menu-2 text-align-direction">
                                 @php($categoryIndex=0)
-                                @foreach($categories as $category)
-                                    @php($categoryIndex++)
-                                    @if($categoryIndex < 10)
-                                        <li class="dropdown">
+                                @if(isset($categories) && is_iterable($categories) && count($categories) > 0)
+                                    @foreach($categories as $category)
+                                        @if(!isset($category) || $category === null)
+                                            @continue
+                                        @endif
+                                        @php($categoryIndex++)
+                                        @if($categoryIndex < 10)
+                                            <li class="dropdown">
 
-                                            <a <?php if ($category->childes->count() > 0) echo "" ?>
-                                               href="{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}">
-                                                <span>{{$category['name']}}</span>
+                                            <a <?php if (isset($category) && isset($category->childes) && $category->childes->count() > 0) echo "" ?>
+                                               href="{{route('products',['id'=> $category['id'] ?? 0,'data_from'=>'category','page'=>1])}}">
+                                                <span>{{$category['name'] ?? ''}}</span>
 
                                             </a>
-                                            @if ($category->childes->count() > 0)
+                                            @if (isset($category) && isset($category->childes) && $category->childes->count() > 0)
                                                 <a data-toggle='dropdown' class='__ml-50px'>
                                                     <i class="czi-arrow-{{Session::get('direction') === "rtl" ? 'left' : 'right'}} __inline-16"></i>
                                                 </a>
                                             @endif
 
-                                            @if($category->childes->count()>0)
+                                            @if(isset($category) && isset($category->childes) && $category->childes->count()>0)
                                                 <ul class="dropdown-menu text-align-direction">
-                                                    @foreach($category['childes'] as $subCategory)
+                                                    @foreach($category['childes'] ?? [] as $subCategory)
                                                         <li class="dropdown">
                                                             <a href="{{route('products',['id'=> $subCategory['id'],'data_from'=>'category','page'=>1])}}">
                                                                 <span>{{$subCategory['name']}}</span>
@@ -296,9 +317,10 @@
                                                     @endforeach
                                                 </ul>
                                             @endif
-                                        </li>
-                                    @endif
-                                @endforeach
+                                            </li>
+                                        @endif
+                                    @endforeach
+                                @endif
                                 <li class="__inline-17">
                                     <div>
                                         <a class="dropdown-item web-text-primary" href="{{ route('categories') }}">
@@ -349,8 +371,19 @@
                                 </ul>
                             </li>
                         @endif
-                        @php($discount_product = App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count())
-                        @if ($discount_product>0)
+                        @php
+                            $discount_product = 0;
+                        @endphp
+                        @php
+                            try {
+                                if(\Illuminate\Support\Facades\Schema::hasTable('products')) {
+                                    $discount_product = (int) App\Models\Product::with(['reviews'])->active()->where('discount', '!=', 0)->count();
+                                }
+                            } catch (\Throwable $e) {
+                                $discount_product = 0;
+                            }
+                        @endphp
+                        @if (isset($discount_product) && $discount_product > 0)
                             <li class="nav-item dropdown {{request()->is('/')?'active':''}}">
                                 <a class="nav-link text-capitalize"
                                    href="{{route('products',['data_from'=>'discounted','page'=>1])}}">{{ translate('discounted_products')}}</a>
@@ -430,8 +463,9 @@
             <div class="container">
                 <div class="category-menu-wrap">
                     <ul class="category-menu">
-                        @foreach ($categories as $key=>$category)
-                            <li>
+                        @if(isset($categories) && is_iterable($categories) && count($categories) > 0)
+                            @foreach ($categories as $key=>$category)
+                                <li>
                                 <a href="{{route('products',['id'=> $category['id'],'data_from'=>'category','page'=>1])}}">{{$category->name}}</a>
                                 @if ($category->childes->count() > 0)
                                     <div class="mega_menu z-2">
@@ -451,8 +485,9 @@
                                         @endforeach
                                     </div>
                                 @endif
-                            </li>
-                        @endforeach
+                                </li>
+                            @endforeach
+                        @endif
                         <li class="text-center">
                             <a href="{{route('categories')}}" class="text-primary font-weight-bold justify-content-center">
                                 {{ translate('View_All') }}

@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('chattings', function (Blueprint $table) {
-            $table->boolean('seen_notification')->after('status')->default(0)->nullable();
+        // Only run if the chattings table exists
+        if (Schema::hasTable('chattings')) {
+                    Schema::table('chattings', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'seen_notification')) {
+                $table->boolean('seen_notification')->after('status')->default(0)->nullable();
+            }
             $table->string('notification_receiver', 20)->after('status')->nullable()->comment('admin, seller, customer, deliveryman');
         });
+        }
     }
 
     /**
@@ -22,9 +28,18 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('chattings', function (Blueprint $table) {
-            $table->dropColumn('seen_notification');
-            $table->dropColumn('notification_receiver');
+        // Only run if the chattings table exists
+        if (Schema::hasTable('chattings')) {
+                    Schema::table('chattings', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'seen_notification')) {
+                $table->dropColumn('seen_notification');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'notification_receiver')) {
+                $table->dropColumn('notification_receiver');
+            }
         });
+        }
     }
 };

@@ -13,9 +13,15 @@ class AddShippingTypeToOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('shipping_type')->nullable();
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'shipping_type')) {
+                $table->string('shipping_type')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddShippingTypeToOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('shipping_type');
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'shipping_type')) {
+                $table->dropColumn('shipping_type');
+            }
         });
+        }
     }
 }

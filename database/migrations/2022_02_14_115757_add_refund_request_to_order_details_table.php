@@ -13,9 +13,15 @@ class AddRefundRequestToOrderDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::table('order_details', function (Blueprint $table) {
-            $table->integer('refund_request')->default(0);
+        // Only run if the order_details table exists
+        if (Schema::hasTable('order_details')) {
+                    Schema::table('order_details', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('order_details', 'refund_request')) {
+                $table->integer('refund_request')->default(0);
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddRefundRequestToOrderDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::table('order_details', function (Blueprint $table) {
-            $table->dropColumn('refund_request');
+        // Only run if the order_details table exists
+        if (Schema::hasTable('order_details')) {
+                    Schema::table('order_details', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('order_details', 'refund_request')) {
+                $table->dropColumn('refund_request');
+            }
         });
+        }
     }
 }

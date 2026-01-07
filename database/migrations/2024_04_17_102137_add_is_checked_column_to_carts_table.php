@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->boolean('is_checked')->default(0)->after('tax_model');
+        // Only run if the carts table exists
+        if (Schema::hasTable('carts')) {
+                    Schema::table('carts', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('carts', 'is_checked')) {
+                $table->boolean('is_checked')->default(0)->after('tax_model');
+            }
         });
+        }
     }
 
     /**
@@ -21,8 +27,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->dropColumn('is_checked');
+        // Only run if the carts table exists
+        if (Schema::hasTable('carts')) {
+                    Schema::table('carts', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('carts', 'is_checked')) {
+                $table->dropColumn('is_checked');
+            }
         });
+        }
     }
 };

@@ -13,10 +13,19 @@ class AddSellerIdToOrder extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->bigInteger('seller_id')->nullable();
-            $table->string('seller_is')->nullable();
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'seller_id')) {
+                $table->bigInteger('seller_id')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'seller_is')) {
+                $table->string('seller_is')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -26,8 +35,11 @@ class AddSellerIdToOrder extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
             //
         });
+        }
     }
 }

@@ -13,11 +13,17 @@ class UpdateStringLimit extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
             $table->string('order_status',50)->change();
             $table->string('payment_method',100)->change();
-            $table->float('order_amount')->change();
+            // Check if column exists before changing
+            if (Schema::hasColumn('orders', 'order_amount')) {
+                $table->float('order_amount')->change();
+            }
         });
+        }
     }
 
     /**
@@ -27,8 +33,11 @@ class UpdateStringLimit extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
             //
         });
+        }
     }
 }

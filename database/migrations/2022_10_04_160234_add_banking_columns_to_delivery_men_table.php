@@ -13,12 +13,27 @@ class AddBankingColumnsToDeliveryMenTable extends Migration
      */
     public function up()
     {
-        Schema::table('delivery_men', function (Blueprint $table) {
-            $table->string('holder_name')->nullable()->after('password');
-            $table->string('account_no')->nullable()->after('password');
-            $table->string('branch')->nullable()->after('password');
-            $table->string('bank_name')->nullable()->after('password');
+        // Only run if the delivery_men table exists
+        if (Schema::hasTable('delivery_men')) {
+                    Schema::table('delivery_men', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'holder_name')) {
+                $table->string('holder_name')->nullable()->after('password');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'account_no')) {
+                $table->string('account_no')->nullable()->after('password');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'branch')) {
+                $table->string('branch')->nullable()->after('password');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'bank_name')) {
+                $table->string('bank_name')->nullable()->after('password');
+            }
         });
+        }
     }
 
     /**
@@ -28,11 +43,26 @@ class AddBankingColumnsToDeliveryMenTable extends Migration
      */
     public function down()
     {
-        Schema::table('delivery_men', function (Blueprint $table) {
-            $table->dropColumn('holder_name')->nullable();
-            $table->dropColumn('account_no')->nullable();
-            $table->dropColumn('branch')->nullable();
-            $table->dropColumn('bank_name')->nullable();
+        // Only run if the delivery_men table exists
+        if (Schema::hasTable('delivery_men')) {
+                    Schema::table('delivery_men', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'holder_name')) {
+                $table->dropColumn('holder_name')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'account_no')) {
+                $table->dropColumn('account_no')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'branch')) {
+                $table->dropColumn('branch')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'bank_name')) {
+                $table->dropColumn('bank_name')->nullable();
+            }
         });
+        }
     }
 }

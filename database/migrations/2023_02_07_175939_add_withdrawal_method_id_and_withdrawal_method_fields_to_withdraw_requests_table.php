@@ -13,10 +13,19 @@ class AddWithdrawalMethodIdAndWithdrawalMethodFieldsToWithdrawRequestsTable exte
      */
     public function up()
     {
-        Schema::table('withdraw_requests', function (Blueprint $table) {
-            $table->foreignId('withdrawal_method_id')->after('amount')->nullable();
-            $table->json('withdrawal_method_fields')->after('withdrawal_method_id')->nullable();
+        // Only run if the withdraw_requests table exists
+        if (Schema::hasTable('withdraw_requests')) {
+                    Schema::table('withdraw_requests', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('withdraw_requests', 'withdrawal_method_id')) {
+                $table->foreignId('withdrawal_method_id')->after('amount')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('withdraw_requests', 'withdrawal_method_fields')) {
+                $table->json('withdrawal_method_fields')->after('withdrawal_method_id')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -26,9 +35,12 @@ class AddWithdrawalMethodIdAndWithdrawalMethodFieldsToWithdrawRequestsTable exte
      */
     public function down()
     {
-        Schema::table('withdraw_requests', function (Blueprint $table) {
+        // Only run if the withdraw_requests table exists
+        if (Schema::hasTable('withdraw_requests')) {
+                    Schema::table('withdraw_requests', function (Blueprint $table) {
             Schema::dropIfExists('withdrawal_method_fields');
             Schema::dropIfExists('withdrawal_method_id');
         });
+        }
     }
 }

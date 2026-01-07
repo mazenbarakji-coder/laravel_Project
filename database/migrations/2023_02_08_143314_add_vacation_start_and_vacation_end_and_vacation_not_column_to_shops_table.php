@@ -13,13 +13,28 @@ class AddVacationStartAndVacationEndAndVacationNotColumnToShopsTable extends Mig
      */
     public function up()
     {
-        Schema::table('shops', function (Blueprint $table) {
-            $table->date('vacation_start_date')->after('image')->nullable();
-            $table->date('vacation_end_date')->after('vacation_start_date')->nullable();
+        // Only run if the shops table exists
+        if (Schema::hasTable('shops')) {
+                    Schema::table('shops', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shops', 'vacation_start_date')) {
+                $table->date('vacation_start_date')->after('image')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shops', 'vacation_end_date')) {
+                $table->date('vacation_end_date')->after('vacation_start_date')->nullable();
+            }
             $table->string('vacation_note', 255)->after('vacation_end_date')->nullable();
-            $table->tinyInteger('vacation_status')->after('vacation_note')->default(0);
-            $table->tinyInteger('temporary_close')->after('vacation_status')->default(0);
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shops', 'vacation_status')) {
+                $table->tinyInteger('vacation_status')->after('vacation_note')->default(0);
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shops', 'temporary_close')) {
+                $table->tinyInteger('temporary_close')->after('vacation_status')->default(0);
+            }
         });
+        }
     }
 
     /**
@@ -29,12 +44,15 @@ class AddVacationStartAndVacationEndAndVacationNotColumnToShopsTable extends Mig
      */
     public function down()
     {
-        Schema::table('shops', function (Blueprint $table) {
+        // Only run if the shops table exists
+        if (Schema::hasTable('shops')) {
+                    Schema::table('shops', function (Blueprint $table) {
             Schema::dropIfExists('vacation_start_date');
             Schema::dropIfExists('vacation_end_date');
             Schema::dropIfExists('vacation_note');
             Schema::dropIfExists('vacation_status');
             Schema::dropIfExists('temporary_close');
         });
+        }
     }
 }

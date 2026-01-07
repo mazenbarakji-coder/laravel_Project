@@ -13,11 +13,23 @@ class ChangeCartColType extends Migration
      */
     public function up()
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->float('price')->change();
-            $table->float('tax')->change();
-            $table->float('discount')->change();
+        // Only run if the carts table exists
+        if (Schema::hasTable('carts')) {
+                    Schema::table('carts', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('carts', 'price')) {
+                $table->float('price')->change();
+            }
+            // Check if column exists before changing
+            if (Schema::hasColumn('carts', 'tax')) {
+                $table->float('tax')->change();
+            }
+            // Check if column exists before changing
+            if (Schema::hasColumn('carts', 'discount')) {
+                $table->float('discount')->change();
+            }
         });
+        }
     }
 
     /**
@@ -27,8 +39,11 @@ class ChangeCartColType extends Migration
      */
     public function down()
     {
-        Schema::table('carts', function (Blueprint $table) {
+        // Only run if the carts table exists
+        if (Schema::hasTable('carts')) {
+                    Schema::table('carts', function (Blueprint $table) {
             //
         });
+        }
     }
 }

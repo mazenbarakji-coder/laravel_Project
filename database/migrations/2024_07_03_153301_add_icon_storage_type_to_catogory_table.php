@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
+        // Only run if the categories table exists
+        if (Schema::hasTable('categories')) {
+                    Schema::table('categories', function (Blueprint $table) {
             $table->string('icon_storage_type',10)->default('public')->after('icon')->nullable();
 
         });
+        }
     }
 
     /**
@@ -22,8 +25,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->dropColumn('icon_storage_type');
+        // Only run if the categories table exists
+        if (Schema::hasTable('categories')) {
+                    Schema::table('categories', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('categories', 'icon_storage_type')) {
+                $table->dropColumn('icon_storage_type');
+            }
         });
+        }
     }
 };

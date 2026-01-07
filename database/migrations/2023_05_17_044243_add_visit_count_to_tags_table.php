@@ -13,9 +13,15 @@ class AddVisitCountToTagsTable extends Migration
      */
     public function up()
     {
-        Schema::table('tags', function (Blueprint $table) {
-            $table->bigInteger('visit_count')->after('tag')->default(0)->unsigned();
+        // Only run if the tags table exists
+        if (Schema::hasTable('tags')) {
+                    Schema::table('tags', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('tags', 'visit_count')) {
+                $table->bigInteger('visit_count')->after('tag')->default(0)->unsigned();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class AddVisitCountToTagsTable extends Migration
      */
     public function down()
     {
-        Schema::table('tags', function (Blueprint $table) {
+        // Only run if the tags table exists
+        if (Schema::hasTable('tags')) {
+                    Schema::table('tags', function (Blueprint $table) {
             Schema::dropIfExists('visit_count');
         });
+        }
     }
 }

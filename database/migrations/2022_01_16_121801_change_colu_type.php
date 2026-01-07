@@ -13,9 +13,15 @@ class ChangeColuType extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->text('billing_address_data')->change();
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('orders', 'billing_address_data')) {
+                $table->text('billing_address_data')->change();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class ChangeColuType extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
             //
         });
+        }
     }
 }

@@ -13,10 +13,19 @@ class AddTransactionAmountTable extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->float('amount')->default(0);
-            $table->string('transaction_type')->nullable();
+        // Only run if the transactions table exists
+        if (Schema::hasTable('transactions')) {
+                    Schema::table('transactions', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('transactions', 'amount')) {
+                $table->float('amount')->default(0);
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('transactions', 'transaction_type')) {
+                $table->string('transaction_type')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -26,8 +35,11 @@ class AddTransactionAmountTable extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
+        // Only run if the transactions table exists
+        if (Schema::hasTable('transactions')) {
+                    Schema::table('transactions', function (Blueprint $table) {
             //
         });
+        }
     }
 }

@@ -13,9 +13,15 @@ class AddOrderNoteToOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->text('order_note')->nullable();
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'order_note')) {
+                $table->text('order_note')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddOrderNoteToOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('order_note');
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'order_note')) {
+                $table->dropColumn('order_note');
+            }
         });
+        }
     }
 }

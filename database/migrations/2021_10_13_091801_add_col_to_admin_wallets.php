@@ -13,9 +13,15 @@ class AddColToAdminWallets extends Migration
      */
     public function up()
     {
-        Schema::table('admin_wallets', function (Blueprint $table) {
-            $table->float('total_tax_collected')->default(0);
+        // Only run if the admin_wallets table exists
+        if (Schema::hasTable('admin_wallets')) {
+                    Schema::table('admin_wallets', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admin_wallets', 'total_tax_collected')) {
+                $table->float('total_tax_collected')->default(0);
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class AddColToAdminWallets extends Migration
      */
     public function down()
     {
-        Schema::table('admin_wallets', function (Blueprint $table) {
+        // Only run if the admin_wallets table exists
+        if (Schema::hasTable('admin_wallets')) {
+                    Schema::table('admin_wallets', function (Blueprint $table) {
             //
         });
+        }
     }
 }

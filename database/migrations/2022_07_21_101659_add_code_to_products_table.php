@@ -13,9 +13,12 @@ class AddCodeToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+                    Schema::table('products', function (Blueprint $table) {
             $table->string('code',191)->nullable();
         });
+        }
     }
 
     /**
@@ -25,8 +28,14 @@ class AddCodeToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('code');
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+                    Schema::table('products', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'code')) {
+                $table->dropColumn('code');
+            }
         });
+        }
     }
 }

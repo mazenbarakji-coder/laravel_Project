@@ -13,10 +13,16 @@ class AddIsPauseCauseToOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
             $table->string('is_pause', 20)->default(0)->after('order_amount');
-            $table->string('cause')->nullable()->after('is_pause');
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'cause')) {
+                $table->string('cause')->nullable()->after('is_pause');
+            }
         });
+        }
     }
 
     /**
@@ -26,9 +32,18 @@ class AddIsPauseCauseToOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('is_pause');
-            $table->dropColumn('cause');
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'is_pause')) {
+                $table->dropColumn('is_pause');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'cause')) {
+                $table->dropColumn('cause');
+            }
         });
+        }
     }
 }

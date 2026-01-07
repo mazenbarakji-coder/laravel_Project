@@ -13,9 +13,15 @@ class AddUserTypeToPasswordResetsTable extends Migration
      */
     public function up()
     {
-        Schema::table('password_resets', function (Blueprint $table) {
-            $table->string('user_type')->default('customer');
+        // Only run if the password_resets table exists
+        if (Schema::hasTable('password_resets')) {
+                    Schema::table('password_resets', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('password_resets', 'user_type')) {
+                $table->string('user_type')->default('customer');
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddUserTypeToPasswordResetsTable extends Migration
      */
     public function down()
     {
-        Schema::table('password_resets', function (Blueprint $table) {
-            $table->dropColumn('user_type');
+        // Only run if the password_resets table exists
+        if (Schema::hasTable('password_resets')) {
+                    Schema::table('password_resets', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('password_resets', 'user_type')) {
+                $table->dropColumn('user_type');
+            }
         });
+        }
     }
 }

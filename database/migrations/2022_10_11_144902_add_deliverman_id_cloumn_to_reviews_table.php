@@ -13,9 +13,15 @@ class AddDelivermanIdCloumnToReviewsTable extends Migration
      */
     public function up()
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            $table->bigInteger('delivery_man_id')->nullable()->after('customer_id');
+        // Only run if the reviews table exists
+        if (Schema::hasTable('reviews')) {
+                    Schema::table('reviews', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('reviews', 'delivery_man_id')) {
+                $table->bigInteger('delivery_man_id')->nullable()->after('customer_id');
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddDelivermanIdCloumnToReviewsTable extends Migration
      */
     public function down()
     {
-        Schema::table('reviews', function (Blueprint $table) {
-            $table->dropColumn('delivery_man_id');
+        // Only run if the reviews table exists
+        if (Schema::hasTable('reviews')) {
+                    Schema::table('reviews', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('reviews', 'delivery_man_id')) {
+                $table->dropColumn('delivery_man_id');
+            }
         });
+        }
     }
 }

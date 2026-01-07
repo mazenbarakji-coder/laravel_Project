@@ -13,9 +13,15 @@ class AddAttachmentColumnToSupportTicketConvsTable extends Migration
      */
     public function up()
     {
-        Schema::table('support_ticket_convs', function (Blueprint $table) {
-            $table->json('attachment')->after('customer_message')->nullable();
+        // Only run if the support_ticket_convs table exists
+        if (Schema::hasTable('support_ticket_convs')) {
+                    Schema::table('support_ticket_convs', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('support_ticket_convs', 'attachment')) {
+                $table->json('attachment')->after('customer_message')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddAttachmentColumnToSupportTicketConvsTable extends Migration
      */
     public function down()
     {
-        Schema::table('support_ticket_convs', function (Blueprint $table) {
-            $table->dropColumn('attachment');
+        // Only run if the support_ticket_convs table exists
+        if (Schema::hasTable('support_ticket_convs')) {
+                    Schema::table('support_ticket_convs', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('support_ticket_convs', 'attachment')) {
+                $table->dropColumn('attachment');
+            }
         });
+        }
     }
 }

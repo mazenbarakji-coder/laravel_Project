@@ -13,11 +13,20 @@ class AddExpiresAtToPasswordResets extends Migration
      */
     public function up()
     {
-        Schema::table('password_resets', function (Blueprint $table) {
+        // Only run if the password_resets table exists
+        if (Schema::hasTable('password_resets')) {
+                    Schema::table('password_resets', function (Blueprint $table) {
             $table->id();
-            $table->timestamp('expires_at')->after('token')->nullable();
-            $table->timestamp('updated_at')->after('created_at')->nullable();
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('password_resets', 'expires_at')) {
+                $table->timestamp('expires_at')->after('token')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('password_resets', 'updated_at')) {
+                $table->timestamp('updated_at')->after('created_at')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -27,10 +36,22 @@ class AddExpiresAtToPasswordResets extends Migration
      */
     public function down()
     {
-        Schema::table('password_resets', function (Blueprint $table) {
-            $table->dropIfExists('id');
-            $table->dropIfExists('expires_at');
-            $table->dropIfExists('updated_at');
+        // Only run if the password_resets table exists
+        if (Schema::hasTable('password_resets')) {
+                    Schema::table('password_resets', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('password_resets', 'id')) {
+                $table->dropIfExists('id');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('password_resets', 'expires_at')) {
+                $table->dropIfExists('expires_at');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('password_resets', 'updated_at')) {
+                $table->dropIfExists('updated_at');
+            }
         });
+        }
     }
 }

@@ -13,9 +13,15 @@ class AddShippingToCartsTable extends Migration
      */
     public function up()
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->float('shipping_cost')->nullable();
+        // Only run if the carts table exists
+        if (Schema::hasTable('carts')) {
+                    Schema::table('carts', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('carts', 'shipping_cost')) {
+                $table->float('shipping_cost')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddShippingToCartsTable extends Migration
      */
     public function down()
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->dropColumn('shipping_cost');
+        // Only run if the carts table exists
+        if (Schema::hasTable('carts')) {
+                    Schema::table('carts', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('carts', 'shipping_cost')) {
+                $table->dropColumn('shipping_cost');
+            }
         });
+        }
     }
 }

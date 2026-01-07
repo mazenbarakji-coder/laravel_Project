@@ -13,10 +13,19 @@ class AddReferralCodeAndReferredByToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('referral_code')->after('temp_block_time')->nullable();
-            $table->integer('referred_by')->after('referral_code')->nullable();
+        // Only run if the users table exists
+        if (Schema::hasTable('users')) {
+                    Schema::table('users', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'referral_code')) {
+                $table->string('referral_code')->after('temp_block_time')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'referred_by')) {
+                $table->integer('referred_by')->after('referral_code')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -26,9 +35,18 @@ class AddReferralCodeAndReferredByToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('referral_code');
-            $table->dropColumn('referred_by');
+        // Only run if the users table exists
+        if (Schema::hasTable('users')) {
+                    Schema::table('users', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'referral_code')) {
+                $table->dropColumn('referral_code');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'referred_by')) {
+                $table->dropColumn('referred_by');
+            }
         });
+        }
     }
 }

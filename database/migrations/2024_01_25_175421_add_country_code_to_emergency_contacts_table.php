@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('emergency_contacts', function (Blueprint $table) {
+        // Only run if the emergency_contacts table exists
+        if (Schema::hasTable('emergency_contacts')) {
+                    Schema::table('emergency_contacts', function (Blueprint $table) {
             $table->string('country_code', 20)->after('name')->nullable();
         });
+        }
     }
 
     /**
@@ -21,8 +24,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('emergency_contacts', function (Blueprint $table) {
-            $table->dropColumn('country_code');
+        // Only run if the emergency_contacts table exists
+        if (Schema::hasTable('emergency_contacts')) {
+                    Schema::table('emergency_contacts', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('emergency_contacts', 'country_code')) {
+                $table->dropColumn('country_code');
+            }
         });
+        }
     }
 };

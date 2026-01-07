@@ -13,10 +13,18 @@ class ChangeProductPriceColType extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->float('unit_price')->change();
-            $table->float('purchase_price')->change();
-        });
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+            Schema::table('products', function (Blueprint $table) {
+                // Check if columns exist before changing
+                if (Schema::hasColumn('products', 'unit_price')) {
+                    $table->float('unit_price')->change();
+                }
+                if (Schema::hasColumn('products', 'purchase_price')) {
+                    $table->float('purchase_price')->change();
+                }
+            });
+        }
     }
 
     /**
@@ -26,8 +34,17 @@ class ChangeProductPriceColType extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            //
-        });
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+            Schema::table('products', function (Blueprint $table) {
+                // Revert column type changes if needed
+                if (Schema::hasColumn('products', 'unit_price')) {
+                    // Note: Reverting float changes may require specific handling
+                }
+                if (Schema::hasColumn('products', 'purchase_price')) {
+                    // Note: Reverting float changes may require specific handling
+                }
+            });
+        }
     }
 }

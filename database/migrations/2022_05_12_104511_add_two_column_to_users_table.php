@@ -13,10 +13,19 @@ class AddTwoColumnToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->float('wallet_balance')->nullable();
-            $table->float('loyalty_point')->nullable();
+        // Only run if the users table exists
+        if (Schema::hasTable('users')) {
+                    Schema::table('users', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'wallet_balance')) {
+                $table->float('wallet_balance')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'loyalty_point')) {
+                $table->float('loyalty_point')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -26,9 +35,18 @@ class AddTwoColumnToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('wallet_balance');
-            $table->dropColumn('loyalty_point');
+        // Only run if the users table exists
+        if (Schema::hasTable('users')) {
+                    Schema::table('users', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'wallet_balance')) {
+                $table->dropColumn('wallet_balance');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('users', 'loyalty_point')) {
+                $table->dropColumn('loyalty_point');
+            }
         });
+        }
     }
 }

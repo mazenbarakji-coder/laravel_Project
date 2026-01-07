@@ -13,9 +13,15 @@ class ChangeIdToTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('transactions', function (Blueprint $table) {
-            $table->increments('id')->change();
+        // Only run if the transactions table exists
+        if (Schema::hasTable('transactions')) {
+                    Schema::table('transactions', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('transactions', 'id')) {
+                $table->increments('id')->change();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class ChangeIdToTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('transactions', function (Blueprint $table) {
+        // Only run if the transactions table exists
+        if (Schema::hasTable('transactions')) {
+                    Schema::table('transactions', function (Blueprint $table) {
             //
         });
+        }
     }
 }

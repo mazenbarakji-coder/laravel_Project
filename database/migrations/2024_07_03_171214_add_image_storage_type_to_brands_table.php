@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('brands', function (Blueprint $table) {
+        // Only run if the brands table exists
+        if (Schema::hasTable('brands')) {
+                    Schema::table('brands', function (Blueprint $table) {
             $table->string('image_storage_type',10)->default('public')->after('image')->nullable();
         });
+        }
     }
 
     /**
@@ -21,8 +24,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('brands', function (Blueprint $table) {
-            $table->dropColumn('image_storage_type');
+        // Only run if the brands table exists
+        if (Schema::hasTable('brands')) {
+                    Schema::table('brands', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('brands', 'image_storage_type')) {
+                $table->dropColumn('image_storage_type');
+            }
         });
+        }
     }
 };

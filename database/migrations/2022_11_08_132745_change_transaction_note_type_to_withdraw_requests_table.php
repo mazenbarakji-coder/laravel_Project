@@ -13,9 +13,15 @@ class ChangeTransactionNoteTypeToWithdrawRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::table('withdraw_requests', function (Blueprint $table) {
-            $table->text('transaction_note')->change();
+        // Only run if the withdraw_requests table exists
+        if (Schema::hasTable('withdraw_requests')) {
+                    Schema::table('withdraw_requests', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('withdraw_requests', 'transaction_note')) {
+                $table->text('transaction_note')->change();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class ChangeTransactionNoteTypeToWithdrawRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::table('withdraw_requests', function (Blueprint $table) {
+        // Only run if the withdraw_requests table exists
+        if (Schema::hasTable('withdraw_requests')) {
+                    Schema::table('withdraw_requests', function (Blueprint $table) {
             //
         });
+        }
     }
 }

@@ -13,9 +13,15 @@ class AddShippingTypeToCartsTable extends Migration
      */
     public function up()
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->string('shipping_type')->nullable();
+        // Only run if the carts table exists
+        if (Schema::hasTable('carts')) {
+                    Schema::table('carts', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('carts', 'shipping_type')) {
+                $table->string('shipping_type')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddShippingTypeToCartsTable extends Migration
      */
     public function down()
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->dropColumn('shipping_type');
+        // Only run if the carts table exists
+        if (Schema::hasTable('carts')) {
+                    Schema::table('carts', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('carts', 'shipping_type')) {
+                $table->dropColumn('shipping_type');
+            }
         });
+        }
     }
 }

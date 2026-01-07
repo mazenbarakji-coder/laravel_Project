@@ -13,11 +13,23 @@ class AddColumnToOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->string('order_type')->default('default_type');
-            $table->float('extra_discount')->default(0);
-            $table->string('extra_discount_type')->nullable();
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'order_type')) {
+                $table->string('order_type')->default('default_type');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'extra_discount')) {
+                $table->float('extra_discount')->default(0);
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'extra_discount_type')) {
+                $table->string('extra_discount_type')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -27,10 +39,22 @@ class AddColumnToOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->dropColumn('order_type');
-            $table->dropColumn('extra_discount');
-            $table->dropColumn('extra_discount_type');
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'order_type')) {
+                $table->dropColumn('order_type');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'extra_discount')) {
+                $table->dropColumn('extra_discount');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'extra_discount_type')) {
+                $table->dropColumn('extra_discount_type');
+            }
         });
+        }
     }
 }

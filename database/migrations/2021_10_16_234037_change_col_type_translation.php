@@ -13,9 +13,15 @@ class ChangeColTypeTranslation extends Migration
      */
     public function up()
     {
-        Schema::table('translations', function (Blueprint $table) {
-            $table->dropColumn('id');
+        // Only run if the translations table exists
+        if (Schema::hasTable('translations')) {
+                    Schema::table('translations', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('translations', 'id')) {
+                $table->dropColumn('id');
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class ChangeColTypeTranslation extends Migration
      */
     public function down()
     {
-        Schema::table('translations', function (Blueprint $table) {
+        // Only run if the translations table exists
+        if (Schema::hasTable('translations')) {
+                    Schema::table('translations', function (Blueprint $table) {
             //
         });
+        }
     }
 }

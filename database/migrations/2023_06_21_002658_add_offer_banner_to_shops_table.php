@@ -13,10 +13,16 @@ class AddOfferBannerToShopsTable extends Migration
      */
     public function up()
     {
-        Schema::table('shops', function (Blueprint $table) {
+        // Only run if the shops table exists
+        if (Schema::hasTable('shops')) {
+                    Schema::table('shops', function (Blueprint $table) {
             //
-            $table->string('offer_banner')->after('bottom_banner')->nullable();
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shops', 'offer_banner')) {
+                $table->string('offer_banner')->after('bottom_banner')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -26,9 +32,15 @@ class AddOfferBannerToShopsTable extends Migration
      */
     public function down()
     {
-        Schema::table('shops', function (Blueprint $table) {
+        // Only run if the shops table exists
+        if (Schema::hasTable('shops')) {
+                    Schema::table('shops', function (Blueprint $table) {
             //
-            $table->dropColumn('offer_banner');
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shops', 'offer_banner')) {
+                $table->dropColumn('offer_banner');
+            }
         });
+        }
     }
 }

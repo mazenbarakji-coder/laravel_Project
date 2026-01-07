@@ -13,9 +13,15 @@ class AddAuthTokenSeller extends Migration
      */
     public function up()
     {
-        Schema::table('sellers', function (Blueprint $table) {
-            $table->text('auth_token')->nullable();
-        });
+        // Only run if the sellers table exists
+        if (Schema::hasTable('sellers')) {
+            Schema::table('sellers', function (Blueprint $table) {
+                // Check if column doesn't already exist
+                if (!Schema::hasColumn('sellers', 'auth_token')) {
+                    $table->text('auth_token')->nullable();
+                }
+            });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddAuthTokenSeller extends Migration
      */
     public function down()
     {
-        Schema::table('sellers', function (Blueprint $table) {
-            //
-        });
+        // Only run if the sellers table exists
+        if (Schema::hasTable('sellers')) {
+            Schema::table('sellers', function (Blueprint $table) {
+                // Check if column exists before dropping
+                if (Schema::hasColumn('sellers', 'auth_token')) {
+                    $table->dropColumn(['auth_token']);
+                }
+            });
+        }
     }
 }

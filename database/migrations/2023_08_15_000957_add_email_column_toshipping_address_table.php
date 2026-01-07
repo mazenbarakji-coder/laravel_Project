@@ -13,9 +13,15 @@ class AddEmailColumnToshippingAddressTable extends Migration
      */
     public function up()
     {
-        Schema::table('shipping_addresses', function (Blueprint $table) {
-            $table->string('email')->nullable()->after('contact_person_name');
+        // Only run if the shipping_addresses table exists
+        if (Schema::hasTable('shipping_addresses')) {
+                    Schema::table('shipping_addresses', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shipping_addresses', 'email')) {
+                $table->string('email')->nullable()->after('contact_person_name');
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddEmailColumnToshippingAddressTable extends Migration
      */
     public function down()
     {
-        Schema::table('shipping_addresses', function (Blueprint $table) {
-            $table->dropColumn('email');
+        // Only run if the shipping_addresses table exists
+        if (Schema::hasTable('shipping_addresses')) {
+                    Schema::table('shipping_addresses', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shipping_addresses', 'email')) {
+                $table->dropColumn('email');
+            }
         });
+        }
     }
 }

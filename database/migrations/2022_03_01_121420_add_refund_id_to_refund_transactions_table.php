@@ -13,9 +13,15 @@ class AddRefundIdToRefundTransactionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('refund_transactions', function (Blueprint $table) {
-            $table->unsignedBigInteger('refund_id')->nullable();
+        // Only run if the refund_transactions table exists
+        if (Schema::hasTable('refund_transactions')) {
+                    Schema::table('refund_transactions', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('refund_transactions', 'refund_id')) {
+                $table->unsignedBigInteger('refund_id')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddRefundIdToRefundTransactionsTable extends Migration
      */
     public function down()
     {
-        Schema::table('refund_transactions', function (Blueprint $table) {
-            $table->dropColumn('refund_id');
+        // Only run if the refund_transactions table exists
+        if (Schema::hasTable('refund_transactions')) {
+                    Schema::table('refund_transactions', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('refund_transactions', 'refund_id')) {
+                $table->dropColumn('refund_id');
+            }
         });
+        }
     }
 }

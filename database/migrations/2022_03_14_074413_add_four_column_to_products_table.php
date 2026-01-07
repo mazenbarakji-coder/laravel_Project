@@ -13,12 +13,27 @@ class AddFourColumnToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->float('shipping_cost')->nullable();
-            $table->boolean('multiply_qty')->nullable();
-            $table->float('temp_shipping_cost')->nullable();
-            $table->boolean('is_shipping_cost_updated')->nullable();
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+                    Schema::table('products', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'shipping_cost')) {
+                $table->float('shipping_cost')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'multiply_qty')) {
+                $table->boolean('multiply_qty')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'temp_shipping_cost')) {
+                $table->float('temp_shipping_cost')->nullable();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'is_shipping_cost_updated')) {
+                $table->boolean('is_shipping_cost_updated')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -28,11 +43,26 @@ class AddFourColumnToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('shipping_cost');
-            $table->dropColumn('multiply_qty');
-            $table->dropColumn('temp_shipping_cost');
-            $table->dropColumn('is_shipping_cost_updated');
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+                    Schema::table('products', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'shipping_cost')) {
+                $table->dropColumn('shipping_cost');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'multiply_qty')) {
+                $table->dropColumn('multiply_qty');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'temp_shipping_cost')) {
+                $table->dropColumn('temp_shipping_cost');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'is_shipping_cost_updated')) {
+                $table->dropColumn('is_shipping_cost_updated');
+            }
         });
+        }
     }
 }

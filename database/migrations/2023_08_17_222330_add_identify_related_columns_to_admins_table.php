@@ -13,11 +13,23 @@ class AddIdentifyRelatedColumnsToAdminsTable extends Migration
      */
     public function up()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->text('identify_image')->nullable()->after('image');
-            $table->string('identify_type')->nullable()->after('identify_image');
-            $table->integer('identify_number')->nullable()->after('identify_type');
+        // Only run if the admins table exists
+        if (Schema::hasTable('admins')) {
+                    Schema::table('admins', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admins', 'identify_image')) {
+                $table->text('identify_image')->nullable()->after('image');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admins', 'identify_type')) {
+                $table->string('identify_type')->nullable()->after('identify_image');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admins', 'identify_number')) {
+                $table->integer('identify_number')->nullable()->after('identify_type');
+            }
         });
+        }
     }
 
     /**
@@ -27,10 +39,22 @@ class AddIdentifyRelatedColumnsToAdminsTable extends Migration
      */
     public function down()
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->text('identify_image');
-            $table->string('identify_type');
-            $table->integer('identify_number');
+        // Only run if the admins table exists
+        if (Schema::hasTable('admins')) {
+                    Schema::table('admins', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admins', 'identify_image')) {
+                $table->text('identify_image');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admins', 'identify_type')) {
+                $table->string('identify_type');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('admins', 'identify_number')) {
+                $table->integer('identify_number');
+            }
         });
+        }
     }
 }

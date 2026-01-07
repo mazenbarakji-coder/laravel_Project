@@ -1,25 +1,13 @@
 "use strict";
 
-// Ensure jQuery is loaded before executing
-(function() {
-    function initHomeScripts() {
-        if (typeof jQuery === 'undefined' || typeof $ === 'undefined') {
-            setTimeout(initHomeScripts, 50);
-            return;
-        }
+updateFlashDealProgressBar();
+setInterval(updateFlashDealProgressBar, 10000);
 
-        var $ = jQuery;
+$(document).ready(function () {
+    var directionFromSession = $("#direction-from-session").data("value");
+    directionFromSession = directionFromSession ? directionFromSession : "ltr";
 
-        $(document).ready(function () {
-            // Initialize flash deal progress bar if function exists
-            if (typeof updateFlashDealProgressBar === 'function') {
-                updateFlashDealProgressBar();
-                setInterval(updateFlashDealProgressBar, 10000);
-            }
-            var directionFromSession = $("#direction-from-session").data("value");
-            directionFromSession = directionFromSession ? directionFromSession : "ltr";
-
-            $(".flash-deal-slider").owlCarousel({
+    $(".flash-deal-slider").owlCarousel({
         loop: false,
         autoplay: true,
         center: false,
@@ -64,10 +52,10 @@
             1200: {
                 items: 4,
             },
-            },
-        });
+        },
+    });
 
-        $(".flash-deal-slider-mobile").owlCarousel({
+    $(".flash-deal-slider-mobile").owlCarousel({
         loop: true,
         autoplay: true,
         center: true,
@@ -112,10 +100,10 @@
             1200: {
                 items: 4,
             },
-            },
-        });
+        },
+    });
 
-        $("#featured_products_list").owlCarousel({
+    $("#featured_products_list").owlCarousel({
         loop: true,
         autoplay: true,
         margin: 20,
@@ -159,10 +147,10 @@
             1200: {
                 items: 6,
             },
-            },
-        });
+        },
+    });
 
-        $(".new-arrivals-product").owlCarousel({
+    $(".new-arrivals-product").owlCarousel({
         loop: true,
         autoplay: true,
         margin: 20,
@@ -209,10 +197,10 @@
             1400: {
                 items: 4,
             },
-            },
-        });
+        },
+    });
 
-        $(".category-wise-product-slider").each(function () {
+    $(".category-wise-product-slider").each(function () {
         $(this).owlCarousel({
             loop: true,
             autoplay: true,
@@ -256,16 +244,16 @@
                 },
             },
             onInitialized: checkNavigationButtons,
-            });
         });
+    });
 
-        function checkNavigationButtons(event) {
-            var itemCount = event.item.count;
-            let owlNav = $(".owl-nav");
-            itemCount > 1 ? owlNav.show() : owlNav.hide();
-        }
+    function checkNavigationButtons(event) {
+        var itemCount = event.item.count;
+        let owlNav = $(".owl-nav");
+        itemCount > 1 ? owlNav.show() : owlNav.hide();
+    }
 
-        $(".hero-slider").owlCarousel({
+    $(".hero-slider").owlCarousel({
         loop: true,
         autoplay: true,
         margin: 20,
@@ -285,11 +273,11 @@
         autoplaySpeed: 1500,
         slideTransition: "linear",
         items: 1,
-            rtl: directionFromSession === "rtl",
-            ltr: directionFromSession === "ltr",
-        });
+        rtl: directionFromSession === "rtl",
+        ltr: directionFromSession === "ltr",
+    });
 
-        $(".brands-slider").owlCarousel({
+    $(".brands-slider").owlCarousel({
         loop: false,
         autoplay: true,
         margin: 10,
@@ -330,21 +318,21 @@
             1400: {
                 items: 12,
             },
-            },
-        });
+        },
+    });
 
-        $(".footer-banner-slider").owlCarousel({
+    $(".footer-banner-slider").owlCarousel({
         loop: true,
         autoplay: true,
         margin: 10,
         nav: false,
         rtl: directionFromSession === "rtl",
         ltr: directionFromSession === "ltr",
-            autoplayHoverPause: true,
-            items: 1,
-        });
+        autoplayHoverPause: true,
+        items: 1,
+    });
 
-        $("#category-slider, #top-seller-slider").owlCarousel({
+    $("#category-slider, #top-seller-slider").owlCarousel({
         loop: false,
         autoplay: true,
         margin: 20,
@@ -381,10 +369,10 @@
             1400: {
                 items: 11,
             },
-            },
-        });
+        },
+    });
 
-        $(".categories--slider").owlCarousel({
+    $(".categories--slider").owlCarousel({
         loop: false,
         autoplay: true,
         margin: 20,
@@ -421,10 +409,10 @@
             1400: {
                 items: 11,
             },
-            },
-        });
+        },
+    });
 
-        const othersStore = $(".others-store-slider").owlCarousel({
+    const othersStore = $(".others-store-slider").owlCarousel({
         responsiveClass: true,
         nav: false,
         dots: false,
@@ -456,19 +444,14 @@
                 items: 4,
                 margin: 26,
             },
-            },
-        });
+        },
+    });
 
-        $(".store-next").on("click", function () {
-                othersStore.trigger("next.owl.carousel", [600]);
-            });
+    $(".store-next").on("click", function () {
+        othersStore.trigger("next.owl.carousel", [600]);
+    });
 
-        $(".store-prev").on("click", function () {
-            othersStore.trigger("prev.owl.carousel", [600]);
-        });
-        });
-    }
-    
-    // Start initialization
-    initHomeScripts();
-})();
+    $(".store-prev").on("click", function () {
+        othersStore.trigger("prev.owl.carousel", [600]);
+    });
+});

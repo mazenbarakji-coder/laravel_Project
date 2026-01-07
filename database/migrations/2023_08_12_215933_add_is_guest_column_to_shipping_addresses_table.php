@@ -13,9 +13,15 @@ class AddIsGuestColumnToShippingAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::table('shipping_addresses', function (Blueprint $table) {
-            $table->tinyInteger('is_guest')->default(0)->after('customer_id');
+        // Only run if the shipping_addresses table exists
+        if (Schema::hasTable('shipping_addresses')) {
+                    Schema::table('shipping_addresses', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shipping_addresses', 'is_guest')) {
+                $table->tinyInteger('is_guest')->default(0)->after('customer_id');
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddIsGuestColumnToShippingAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::table('shipping_addresses', function (Blueprint $table) {
-            $table->dropColumn('is_guest');
+        // Only run if the shipping_addresses table exists
+        if (Schema::hasTable('shipping_addresses')) {
+                    Schema::table('shipping_addresses', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('shipping_addresses', 'is_guest')) {
+                $table->dropColumn('is_guest');
+            }
         });
+        }
     }
 }

@@ -13,9 +13,15 @@ class AddMinimumOrderQtyToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->integer('minimum_order_qty')->after('current_stock')->default(1);
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+                    Schema::table('products', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'minimum_order_qty')) {
+                $table->integer('minimum_order_qty')->after('current_stock')->default(1);
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,14 @@ class AddMinimumOrderQtyToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('minimum_order_qty');
+        // Only run if the products table exists
+        if (Schema::hasTable('products')) {
+                    Schema::table('products', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('products', 'minimum_order_qty')) {
+                $table->dropColumn('minimum_order_qty');
+            }
         });
+        }
     }
 }

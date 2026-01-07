@@ -13,9 +13,15 @@ class AddShippingAddressInOrder extends Migration
      */
     public function up()
     {
-        Schema::table('orders', function (Blueprint $table) {
-            $table->text('shipping_address_data')->nullable();
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('orders', 'shipping_address_data')) {
+                $table->text('shipping_address_data')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class AddShippingAddressInOrder extends Migration
      */
     public function down()
     {
-        Schema::table('orders', function (Blueprint $table) {
+        // Only run if the orders table exists
+        if (Schema::hasTable('orders')) {
+                    Schema::table('orders', function (Blueprint $table) {
             //
         });
+        }
     }
 }

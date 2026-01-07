@@ -13,16 +13,43 @@ class AddDeliverymansColumnsToChattingsTable extends Migration
      */
     public function up()
     {
-        Schema::table('chattings', function (Blueprint $table) {
-            $table->bigInteger('user_id')->nullable()->change();
-            $table->bigInteger('seller_id')->nullable()->change();
-            $table->bigInteger('delivery_man_id')->nullable()->after('seller_id');
-            $table->bigInteger('admin_id')->nullable()->after('seller_id');
-            $table->boolean('sent_by_delivery_man')->nullable()->after('sent_by_seller');
-            $table->boolean('sent_by_admin')->nullable()->after('sent_by_seller');
-            $table->boolean('seen_by_delivery_man')->nullable()->after('seen_by_seller');
-            $table->boolean('seen_by_admin')->nullable()->after('seen_by_seller');
+        // Only run if the chattings table exists
+        if (Schema::hasTable('chattings')) {
+                    Schema::table('chattings', function (Blueprint $table) {
+            // Check if column exists before changing
+            if (Schema::hasColumn('chattings', 'user_id')) {
+                $table->bigInteger('user_id')->nullable()->change();
+            }
+            // Check if column exists before changing
+            if (Schema::hasColumn('chattings', 'seller_id')) {
+                $table->bigInteger('seller_id')->nullable()->change();
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'delivery_man_id')) {
+                $table->bigInteger('delivery_man_id')->nullable()->after('seller_id');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'admin_id')) {
+                $table->bigInteger('admin_id')->nullable()->after('seller_id');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'sent_by_delivery_man')) {
+                $table->boolean('sent_by_delivery_man')->nullable()->after('sent_by_seller');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'sent_by_admin')) {
+                $table->boolean('sent_by_admin')->nullable()->after('sent_by_seller');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'seen_by_delivery_man')) {
+                $table->boolean('seen_by_delivery_man')->nullable()->after('seen_by_seller');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'seen_by_admin')) {
+                $table->boolean('seen_by_admin')->nullable()->after('seen_by_seller');
+            }
         });
+        }
     }
 
     /**
@@ -32,15 +59,42 @@ class AddDeliverymansColumnsToChattingsTable extends Migration
      */
     public function down()
     {
-        Schema::table('chattings', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-            $table->dropColumn('seller_id');
-            $table->dropColumn('delivery_man_id');
-            $table->dropColumn('admin_id');
-            $table->dropColumn('sent_by_delivery_man');
-            $table->dropColumn('sent_by_admin');
-            $table->dropColumn('seen_by_delivery_man');
-            $table->dropColumn('seen_by_admin');
+        // Only run if the chattings table exists
+        if (Schema::hasTable('chattings')) {
+                    Schema::table('chattings', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'user_id')) {
+                $table->dropColumn('user_id');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'seller_id')) {
+                $table->dropColumn('seller_id');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'delivery_man_id')) {
+                $table->dropColumn('delivery_man_id');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'admin_id')) {
+                $table->dropColumn('admin_id');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'sent_by_delivery_man')) {
+                $table->dropColumn('sent_by_delivery_man');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'sent_by_admin')) {
+                $table->dropColumn('sent_by_admin');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'seen_by_delivery_man')) {
+                $table->dropColumn('seen_by_delivery_man');
+            }
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('chattings', 'seen_by_admin')) {
+                $table->dropColumn('seen_by_admin');
+            }
         });
+        }
     }
 }

@@ -62,7 +62,7 @@
                                 @foreach(json_decode($language['value'],true) as $data)
                                     @if($data['code']==$local)
                                         <img width="20"
-                                             src="{{theme_asset('assets/img/flags')}}/{{ $data['code'].'.png' }}"
+                                             src="{{theme_asset('assets/img/flags/' . $data['code'] . '.png')}}"
                                              class="dark-support" alt="{{translate('Eng')}}"/>
                                         {{ ucwords($data['name']) }}
                                     @endif
@@ -73,7 +73,7 @@
                                     @if($data['status']==1)
                                         <li class="change-language" data-action="{{route('change-language')}}" data-language-code="{{$data['code']}}">
                                             <a class="d-flex gap-2 align-items-center" href="javascript:">
-                                                <img width="20" src="{{theme_asset('assets/img/flags')}}/{{ $data['code'].'.png' }}"
+                                                <img width="20" src="{{theme_asset('assets/img/flags/' . $data['code'] . '.png')}}"
                                                      loading="lazy" class="dark-support" alt="{{$data['name']}}"/>
                                                 {{ ucwords($data['name']) }}
                                             </a>

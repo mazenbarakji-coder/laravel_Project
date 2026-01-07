@@ -13,9 +13,15 @@ class AddFcmColForDeliveryMan extends Migration
      */
     public function up()
     {
-        Schema::table('delivery_men', function (Blueprint $table) {
-            $table->string('fcm_token')->nullable();
+        // Only run if the delivery_men table exists
+        if (Schema::hasTable('delivery_men')) {
+                    Schema::table('delivery_men', function (Blueprint $table) {
+            // Check if column doesn't already exist
+            if (!Schema::hasColumn('delivery_men', 'fcm_token')) {
+                $table->string('fcm_token')->nullable();
+            }
         });
+        }
     }
 
     /**
@@ -25,8 +31,11 @@ class AddFcmColForDeliveryMan extends Migration
      */
     public function down()
     {
-        Schema::table('delivery_men', function (Blueprint $table) {
+        // Only run if the delivery_men table exists
+        if (Schema::hasTable('delivery_men')) {
+                    Schema::table('delivery_men', function (Blueprint $table) {
             //
         });
+        }
     }
 }
