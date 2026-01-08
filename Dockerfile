@@ -13,6 +13,8 @@ RUN apk add --no-cache \
     icu-dev \
     libzip-dev \
     mariadb-client \
+    nginx \
+    supervisor \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
@@ -36,26 +38,21 @@ FROM base AS builder
 
 WORKDIR /var/www/html
 
-COPY composer.json composer.lock ./
+# ⬅️ انسخ المشروع كامل
+COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-COPY . .
-
-RUN php artisan config:clear \
+RUN php artisan key:generate --force || true \
+    && php artisan config:clear \
     && php artisan config:cache || true \
     && php artisan route:cache || true \
     && php artisan view:cache || true
 
 # ==============================
-# Stage 3: Production image
+# Stage 3: Production
 # ==============================
-FROM php:8.1-fpm-alpine AS production
-
-RUN apk add --no-cache \
-    nginx \
-    supervisor \
-    curl
+FROM base AS production
 
 WORKDIR /var/www/html
 
