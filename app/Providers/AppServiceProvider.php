@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 ini_set('memory_limit',-1);
 ini_set('upload_max_filesize','180M');
@@ -236,6 +237,8 @@ class AppServiceProvider extends ServiceProvider
                 ]
             );
         });
-
+        if (app()->environment('production')) {
+            URL::forceScheme('https');
+        }
     }
 }
