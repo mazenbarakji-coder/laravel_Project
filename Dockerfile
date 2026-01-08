@@ -15,6 +15,7 @@ RUN apk add --no-cache \
     mariadb-client \
     nginx \
     supervisor \
+    gettext \
     && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
@@ -38,7 +39,6 @@ FROM base AS builder
 
 WORKDIR /var/www/html
 
-# ⬅️ انسخ المشروع كامل
 COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
@@ -70,9 +70,10 @@ RUN echo "upload_max_filesize=200M" > /usr/local/etc/php/conf.d/uploads.ini \
 # PHP-FPM socket
 RUN sed -i 's|127.0.0.1:9000|/var/run/php-fpm.sock|' /usr/local/etc/php-fpm.d/www.conf
 
-# Nginx config
-RUN printf 'server {\n\
-    listen 80;\n\
+# Nginx template (Railway PORT)
+RUN mkdir -p /etc/nginx/templates \
+    && printf 'server {\n\
+    listen ${PORT};\n\
     root /var/www/html/public;\n\
     index index.php;\n\
     location / { try_files $uri $uri/ /index.php?$query_string; }\n\
@@ -82,7 +83,7 @@ RUN printf 'server {\n\
         include fastcgi_params;\n\
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;\n\
     }\n\
-}' > /etc/nginx/http.d/default.conf
+}' > /etc/nginx/templates/default.conf.template
 
 # Supervisor
 RUN mkdir -p /etc/supervisor/conf.d \
@@ -93,4 +94,4 @@ RUN mkdir -p /etc/supervisor/conf.d \
 
 EXPOSE 80
 
-CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
+CMD sh -c "envsubst '\$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/http.d/default.conf && supervisord -c /etc/supervisor/conf.d/supervisord.conf"
