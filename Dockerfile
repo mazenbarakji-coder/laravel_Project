@@ -1,7 +1,7 @@
 # ==============================
 # Stage 1: PHP base with extensions
 # ==============================
-FROM php:8.1-fpm-alpine AS base
+FROM php:8.2-fpm-alpine AS base
 
 RUN apk add --no-cache \
     git \
