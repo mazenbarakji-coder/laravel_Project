@@ -85,7 +85,8 @@ RUN printf 'server {\n\
 }' > /etc/nginx/http.d/default.conf
 
 # Supervisor
-RUN printf '[supervisord]\nnodaemon=true\n\n\
+RUN mkdir -p /etc/supervisor/conf.d \
+    && printf '[supervisord]\nnodaemon=true\n\n\
 [program:php-fpm]\ncommand=php-fpm\n\n\
 [program:nginx]\ncommand=nginx -g "daemon off;"\n' \
 > /etc/supervisor/conf.d/supervisord.conf
