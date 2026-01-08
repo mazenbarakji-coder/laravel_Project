@@ -5,7 +5,6 @@ namespace App\Utils;
 use App\Utils\Helpers;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Support\Facades\Schema;
 
 class CategoryManager
 {
@@ -70,11 +69,6 @@ class CategoryManager
 
     public static function getCategoriesWithCountingAndPriorityWiseSorting($dataLimit = null)
     {
-        try {
-            if (!Schema::hasTable('categories')) {
-                return collect([]);
-            }
-
         $categories = Category::with(['product' => function ($query) {
                 return $query->active()->withCount(['orderDetails']);
             }])->withCount(['product' => function ($query) {
@@ -90,10 +84,6 @@ class CategoryManager
             $categoriesProcessed = $categoriesProcessed->paginate($dataLimit);
         }
         return $categoriesProcessed;
-        } catch (\Exception $e) {
-            // Table doesn't exist or query failed, return empty collection
-            return collect([]);
-        }
     }
 
     public static function getPriorityWiseCategorySortQuery($query)

@@ -13,15 +13,9 @@ class ExRateUpdate extends Migration
      */
     public function up()
     {
-        // Only run if the currencies table exists
-        if (Schema::hasTable('currencies')) {
-            Schema::table('currencies', function (Blueprint $table) {
-                // Check if column exists before changing
-                if (Schema::hasColumn('currencies', 'exchange_rate')) {
-                    $table->string('exchange_rate')->change();
-                }
-            });
-        }
+        Schema::table('currencies', function (Blueprint $table) {
+            $table->string('exchange_rate')->change();
+        });
     }
 
     /**
@@ -31,15 +25,8 @@ class ExRateUpdate extends Migration
      */
     public function down()
     {
-        // Only run if the currencies table exists
-        if (Schema::hasTable('currencies')) {
-            Schema::table('currencies', function (Blueprint $table) {
-                // Revert column type change if needed
-                if (Schema::hasColumn('currencies', 'exchange_rate')) {
-                    // Note: Reverting string changes may require specific handling
-                    // Adjust based on your original column type
-                }
-            });
-        }
+        Schema::table('currencies', function (Blueprint $table) {
+            //
+        });
     }
 }

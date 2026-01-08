@@ -13,23 +13,11 @@ class AddLoginHitCountAndIsTempBlockedAndTempBlockTimeToUsersTable extends Migra
      */
     public function up()
     {
-        // Only run if the users table exists
-        if (Schema::hasTable('users')) {
-                    Schema::table('users', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'login_hit_count')) {
-                $table->tinyInteger('login_hit_count')->default(0);
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'is_temp_blocked')) {
-                $table->boolean('is_temp_blocked')->default(0);
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'temp_block_time')) {
-                $table->timestamp('temp_block_time')->nullable();
-            }
+        Schema::table('users', function (Blueprint $table) {
+            $table->tinyInteger('login_hit_count')->default(0);
+            $table->boolean('is_temp_blocked')->default(0);
+            $table->timestamp('temp_block_time')->nullable();
         });
-        }
     }
 
     /**
@@ -39,22 +27,10 @@ class AddLoginHitCountAndIsTempBlockedAndTempBlockTimeToUsersTable extends Migra
      */
     public function down()
     {
-        // Only run if the users table exists
-        if (Schema::hasTable('users')) {
-                    Schema::table('users', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'login_hit_count')) {
-                $table->dropColumn('login_hit_count');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'is_temp_blocked')) {
-                $table->dropColumn('is_temp_blocked');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'temp_block_time')) {
-                $table->dropColumn('temp_block_time');
-            }
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('login_hit_count');
+            $table->dropColumn('is_temp_blocked');
+            $table->dropColumn('temp_block_time');
         });
-        }
     }
 }

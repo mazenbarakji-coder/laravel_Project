@@ -13,15 +13,9 @@ class AddVerificationStatusColumnToOrdersTable extends Migration
      */
     public function up()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'verification_status')) {
-                $table->tinyInteger('verification_status')->after('verification_code')->default(0);
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->tinyInteger('verification_status')->after('verification_code')->default(0);
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddVerificationStatusColumnToOrdersTable extends Migration
      */
     public function down()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'verification_status')) {
-                $table->tinyInteger('verification_status');
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->tinyInteger('verification_status');
         });
-        }
     }
 }

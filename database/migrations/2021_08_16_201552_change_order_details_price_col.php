@@ -13,21 +13,11 @@ class ChangeOrderDetailsPriceCol extends Migration
      */
     public function up()
     {
-        // Only run if the order_details table exists
-        if (Schema::hasTable('order_details')) {
-            Schema::table('order_details', function (Blueprint $table) {
-                // Check if columns exist before changing
-                if (Schema::hasColumn('order_details', 'price')) {
-                    $table->float('price')->change();
-                }
-                if (Schema::hasColumn('order_details', 'tax')) {
-                    $table->float('tax')->change();
-                }
-                if (Schema::hasColumn('order_details', 'discount')) {
-                    $table->float('discount')->change();
-                }
-            });
-        }
+        Schema::table('order_details', function (Blueprint $table) {
+            $table->float('price')->change();
+            $table->float('tax')->change();
+            $table->float('discount')->change();
+        });
     }
 
     /**
@@ -37,20 +27,8 @@ class ChangeOrderDetailsPriceCol extends Migration
      */
     public function down()
     {
-        // Only run if the order_details table exists
-        if (Schema::hasTable('order_details')) {
-            Schema::table('order_details', function (Blueprint $table) {
-                // Revert column type changes if needed
-                if (Schema::hasColumn('order_details', 'price')) {
-                    // Note: Reverting float changes may require specific handling
-                }
-                if (Schema::hasColumn('order_details', 'tax')) {
-                    // Note: Reverting float changes may require specific handling
-                }
-                if (Schema::hasColumn('order_details', 'discount')) {
-                    // Note: Reverting float changes may require specific handling
-                }
-            });
-        }
+        Schema::table('order_details', function (Blueprint $table) {
+            //
+        });
     }
 }

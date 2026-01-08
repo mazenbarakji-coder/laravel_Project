@@ -13,15 +13,9 @@ class AddFreeDeliveryResponsibilityColumnToOrdersTable extends Migration
      */
     public function up()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'free_delivery_bearer')) {
-                $table->string('free_delivery_bearer')->after('extra_discount_type')->nullable();
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->string('free_delivery_bearer')->after('extra_discount_type')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddFreeDeliveryResponsibilityColumnToOrdersTable extends Migration
      */
     public function down()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'free_delivery_bearer')) {
-                $table->dropColumn('free_delivery_bearer');
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('free_delivery_bearer');
         });
-        }
     }
 }

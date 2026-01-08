@@ -160,3 +160,5 @@ echo "   ⏭️  Skipped: {$skippedCount} migrations\n";
 echo "\n💡 Run 'php artisan migrate --force' to test.\n";
 
 
+
+

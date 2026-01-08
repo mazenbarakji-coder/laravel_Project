@@ -13,19 +13,10 @@ class AddPublishToProductsTable extends Migration
      */
     public function up()
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'request_status')) {
-                $table->boolean('request_status')->default(0);
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'denied_note')) {
-                $table->string('denied_note')->nullable();
-            }
+        Schema::table('products', function (Blueprint $table) {
+            $table->boolean('request_status')->default(0);
+            $table->string('denied_note')->nullable();
         });
-        }
     }
 
     /**
@@ -35,18 +26,9 @@ class AddPublishToProductsTable extends Migration
      */
     public function down()
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'request_status')) {
-                $table->dropColumn('request_status');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'denied_note')) {
-                $table->dropColumn('denied_note');
-            }
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('request_status');
+            $table->dropColumn('denied_note');
         });
-        }
     }
 }

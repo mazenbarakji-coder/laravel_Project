@@ -13,15 +13,9 @@ class AddAppLanguageColumnToUsersTable extends Migration
      */
     public function up()
     {
-        // Only run if the users table exists
-        if (Schema::hasTable('users')) {
-                    Schema::table('users', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'app_language')) {
-                $table->string('app_language')->default('en');
-            }
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('app_language')->default('en');
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddAppLanguageColumnToUsersTable extends Migration
      */
     public function down()
     {
-        // Only run if the users table exists
-        if (Schema::hasTable('users')) {
-                    Schema::table('users', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'app_language')) {
-                $table->dropColumn('app_language');
-            }
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('app_language');
         });
-        }
     }
 }

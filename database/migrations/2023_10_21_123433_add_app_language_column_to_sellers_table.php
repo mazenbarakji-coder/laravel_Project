@@ -13,15 +13,9 @@ class AddAppLanguageColumnToSellersTable extends Migration
      */
     public function up()
     {
-        // Only run if the sellers table exists
-        if (Schema::hasTable('sellers')) {
-                    Schema::table('sellers', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('sellers', 'app_language')) {
-                $table->string('app_language')->default('en');
-            }
+        Schema::table('sellers', function (Blueprint $table) {
+            $table->string('app_language')->default('en');
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddAppLanguageColumnToSellersTable extends Migration
      */
     public function down()
     {
-        // Only run if the sellers table exists
-        if (Schema::hasTable('sellers')) {
-                    Schema::table('sellers', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('sellers', 'app_language')) {
-                $table->dropColumn('app_language');
-            }
+        Schema::table('sellers', function (Blueprint $table) {
+            $table->dropColumn('app_language');
         });
-        }
     }
 }

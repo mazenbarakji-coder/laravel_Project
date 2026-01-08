@@ -13,12 +13,9 @@ class AttachmentLenghtChangeToReviewsTable extends Migration
      */
     public function up()
     {
-        // Only run if the reviews table exists
-        if (Schema::hasTable('reviews')) {
-                    Schema::table('reviews', function (Blueprint $table) {
+        Schema::table('reviews', function (Blueprint $table) {
             $table->string('attachment', 255)->change();
         });
-        }
     }
 
     /**
@@ -28,11 +25,8 @@ class AttachmentLenghtChangeToReviewsTable extends Migration
      */
     public function down()
     {
-        // Only run if the reviews table exists
-        if (Schema::hasTable('reviews')) {
-                    Schema::table('reviews', function (Blueprint $table) {
+        Schema::table('reviews', function (Blueprint $table) {
             $table->string('attachment', 191)->change();
         });
-        }
     }
 }

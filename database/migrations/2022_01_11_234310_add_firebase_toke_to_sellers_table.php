@@ -13,15 +13,9 @@ class AddFirebaseTokeToSellersTable extends Migration
      */
     public function up()
     {
-        // Only run if the sellers table exists
-        if (Schema::hasTable('sellers')) {
-                    Schema::table('sellers', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('sellers', 'cm_firebase_token')) {
-                $table->string('cm_firebase_token')->nullable();
-            }
+        Schema::table('sellers', function (Blueprint $table) {
+            $table->string('cm_firebase_token')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddFirebaseTokeToSellersTable extends Migration
      */
     public function down()
     {
-        // Only run if the sellers table exists
-        if (Schema::hasTable('sellers')) {
-                    Schema::table('sellers', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('sellers', 'cm_firebase_token')) {
-                $table->dropColumn('cm_firebase_token');
-            }
+        Schema::table('sellers', function (Blueprint $table) {
+            $table->dropColumn('cm_firebase_token');
         });
-        }
     }
 }

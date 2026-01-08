@@ -13,27 +13,12 @@ class AddMultipleColumnToRefundRequestsTable extends Migration
      */
     public function up()
     {
-        // Only run if the refund_requests table exists
-        if (Schema::hasTable('refund_requests')) {
-                    Schema::table('refund_requests', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('refund_requests', 'approved_note')) {
-                $table->longText('approved_note')->nullable();
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('refund_requests', 'rejected_note')) {
-                $table->longText('rejected_note')->nullable();
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('refund_requests', 'payment_info')) {
-                $table->longText('payment_info')->nullable();
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('refund_requests', 'change_by')) {
-                $table->string('change_by')->nullable();
-            }
+        Schema::table('refund_requests', function (Blueprint $table) {
+            $table->longText('approved_note')->nullable();
+            $table->longText('rejected_note')->nullable();
+            $table->longText('payment_info')->nullable();
+            $table->string('change_by')->nullable();
         });
-        }
     }
 
     /**
@@ -43,26 +28,11 @@ class AddMultipleColumnToRefundRequestsTable extends Migration
      */
     public function down()
     {
-        // Only run if the refund_requests table exists
-        if (Schema::hasTable('refund_requests')) {
-                    Schema::table('refund_requests', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('refund_requests', 'approved_note')) {
-                $table->dropColumn('approved_note');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('refund_requests', 'rejected_note')) {
-                $table->dropColumn('rejected_note');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('refund_requests', 'payment_info')) {
-                $table->dropColumn('payment_info');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('refund_requests', 'change_by')) {
-                $table->dropColumn('change_by');
-            }
+        Schema::table('refund_requests', function (Blueprint $table) {
+            $table->dropColumn('approved_note');
+            $table->dropColumn('rejected_note');
+            $table->dropColumn('payment_info');
+            $table->dropColumn('change_by');
         });
-        }
     }
 }

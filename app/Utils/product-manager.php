@@ -17,7 +17,6 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class ProductManager
 {
@@ -1309,11 +1308,6 @@ class ProductManager
 
     public static function getPriorityWiseFlashDealsProductsQuery($id = null, $userId = null): array
     {
-        $flashDeal = null;
-        $flashDealProducts = null;
-
-        try {
-            if (Schema::hasTable('flash_deals') && Schema::hasTable('flash_deal_products')) {
         $flashDeal = FlashDeal::where(['deal_type' => 'flash_deal', 'status' => 1])
             ->when($id, function ($query) use ($id) {
                 return $query->where(['id' => $id]);
@@ -1323,18 +1317,12 @@ class ProductManager
             ->withCount(['products'])
             ->first();
 
-                if ($flashDeal && Schema::hasTable('products')) {
+        if ($flashDeal) {
             $flashDealProducts = ProductManager::getPriorityWiseFlashDealsProductsQuerySorting(
                 query: Product::active(),
                 flashDeal: $flashDeal,
                 userId: $userId,
             );
-                }
-            }
-        } catch (\Exception $e) {
-            // Tables don't exist or query failed, return null values
-            $flashDeal = null;
-            $flashDealProducts = null;
         }
 
         return [

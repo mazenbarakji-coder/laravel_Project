@@ -13,12 +13,9 @@ class AddTaxModelToOrderDetailsTable extends Migration
      */
     public function up()
     {
-        // Only run if the order_details table exists
-        if (Schema::hasTable('order_details')) {
-                    Schema::table('order_details', function (Blueprint $table) {
+        Schema::table('order_details', function (Blueprint $table) {
             $table->string('tax_model', 20)->after('discount')->default('exclude');
         });
-        }
     }
 
     /**
@@ -28,11 +25,8 @@ class AddTaxModelToOrderDetailsTable extends Migration
      */
     public function down()
     {
-        // Only run if the order_details table exists
-        if (Schema::hasTable('order_details')) {
-                    Schema::table('order_details', function (Blueprint $table) {
+        Schema::table('order_details', function (Blueprint $table) {
             Schema::dropIfExists('tax_model');
         });
-        }
     }
 }

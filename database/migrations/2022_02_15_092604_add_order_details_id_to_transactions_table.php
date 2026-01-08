@@ -13,15 +13,9 @@ class AddOrderDetailsIdToTransactionsTable extends Migration
      */
     public function up()
     {
-        // Only run if the transactions table exists
-        if (Schema::hasTable('transactions')) {
-                    Schema::table('transactions', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('transactions', 'order_details_id')) {
-                $table->unsignedBigInteger('order_details_id')->nullable();
-            }
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->unsignedBigInteger('order_details_id')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddOrderDetailsIdToTransactionsTable extends Migration
      */
     public function down()
     {
-        // Only run if the transactions table exists
-        if (Schema::hasTable('transactions')) {
-                    Schema::table('transactions', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('transactions', 'order_details_id')) {
-                $table->dropColumn('order_details_id');
-            }
+        Schema::table('transactions', function (Blueprint $table) {
+            $table->dropColumn('order_details_id');
         });
-        }
     }
 }

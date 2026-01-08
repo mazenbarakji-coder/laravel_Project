@@ -13,16 +13,10 @@ class RenameAndRemoveColSellerWallet extends Migration
      */
     public function up()
     {
-        // Only run if the seller_wallets table exists
-        if (Schema::hasTable('seller_wallets')) {
-            Schema::table('seller_wallets', function (Blueprint $table) {
-                // Only rename if balance exists and total_earning doesn't exist yet
-                if (Schema::hasColumn('seller_wallets', 'balance') && !Schema::hasColumn('seller_wallets', 'total_earning')) {
-                    $table->renameColumn('balance', 'total_earning');
-                }
-                // If total_earning already exists, the migration was already run, skip it
-            });
-        }
+        Schema::table('seller_wallets', function (Blueprint $table) {
+            $table->dropColumn('total_earning');
+            $table->renameColumn('balance', 'total_earning');
+        });
     }
 
     /**
@@ -32,14 +26,8 @@ class RenameAndRemoveColSellerWallet extends Migration
      */
     public function down()
     {
-        // Only run if the seller_wallets table exists
-        if (Schema::hasTable('seller_wallets')) {
-            Schema::table('seller_wallets', function (Blueprint $table) {
-                // Reverse: rename total_earning back to balance
-                if (Schema::hasColumn('seller_wallets', 'total_earning') && !Schema::hasColumn('seller_wallets', 'balance')) {
-                    $table->renameColumn('total_earning', 'balance');
-                }
-            });
-        }
+        Schema::table('seller_wallets', function (Blueprint $table) {
+            //
+        });
     }
 }

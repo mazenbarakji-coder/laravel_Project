@@ -20,11 +20,9 @@
 
 @section('content')
     <div class="__inline-61">
-        @php
-            $decimalPointSettings = !empty(getWebConfig(name: 'decimal_point_settings')) ? getWebConfig(name: 'decimal_point_settings') : 0;
-        @endphp
+        @php($decimalPointSettings = !empty(getWebConfig(name: 'decimal_point_settings')) ? getWebConfig(name: 'decimal_point_settings') : 0)
         
-        @include('web-views.partials._home-top-slider')
+                @include('web-views.partials._home-top-slider',['main_banner'=>$main_banner])
 
         @if ($flashDeal['flashDeal'] && $flashDeal['flashDealProducts'])
             @include('web-views.partials._flash-deal', ['decimal_point_settings'=>$decimalPointSettings])
@@ -102,9 +100,7 @@
             </div>
         @endif
 
-        @php
-            $businessMode = getWebConfig(name: 'business_mode');
-        @endphp
+        @php($businessMode = getWebConfig(name: 'business_mode'))
         @if ($businessMode == 'multi' && count($topVendorsList) > 0)
             @include('web-views.partials._top-sellers')
         @endif
@@ -214,9 +210,7 @@
             @endforeach
         @endif
 
-        @php
-            $companyReliability = getWebConfig(name: 'company_reliability');
-        @endphp
+        @php($companyReliability = getWebConfig(name: 'company_reliability'))
         @if($companyReliability != null)
             @include('web-views.partials._company-reliability')
         @endif
@@ -226,7 +220,7 @@
 @endsection
 
 @push('script')
-    {{-- owl.carousel.min.js is already loaded in the layout file, no need to load again --}}
+    <script src="{{theme_asset(path: 'public/assets/front-end/js/owl.carousel.min.js')}}"></script>
     <script src="{{ theme_asset(path: 'public/assets/front-end/js/home.js') }}"></script>
 @endpush
 

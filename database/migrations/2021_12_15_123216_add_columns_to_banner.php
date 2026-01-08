@@ -13,19 +13,10 @@ class AddColumnsToBanner extends Migration
      */
     public function up()
     {
-        // Only run if the banners table exists
-        if (Schema::hasTable('banners')) {
-                    Schema::table('banners', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('banners', 'resource_type')) {
-                $table->string('resource_type')->nullable();
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('banners', 'resource_id')) {
-                $table->bigInteger('resource_id')->nullable();
-            }
+        Schema::table('banners', function (Blueprint $table) {
+            $table->string('resource_type')->nullable();
+            $table->bigInteger('resource_id')->nullable();
         });
-        }
     }
 
     /**
@@ -35,11 +26,8 @@ class AddColumnsToBanner extends Migration
      */
     public function down()
     {
-        // Only run if the banners table exists
-        if (Schema::hasTable('banners')) {
-                    Schema::table('banners', function (Blueprint $table) {
+        Schema::table('banners', function (Blueprint $table) {
             //
         });
-        }
     }
 }

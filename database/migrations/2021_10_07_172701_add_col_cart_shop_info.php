@@ -13,15 +13,9 @@ class AddColCartShopInfo extends Migration
      */
     public function up()
     {
-        // Only run if the carts table exists
-        if (Schema::hasTable('carts')) {
-                    Schema::table('carts', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('carts', 'shop_info')) {
-                $table->string('shop_info')->nullable();
-            }
+        Schema::table('carts', function (Blueprint $table) {
+            $table->string('shop_info')->nullable();
         });
-        }
     }
 
     /**
@@ -31,11 +25,8 @@ class AddColCartShopInfo extends Migration
      */
     public function down()
     {
-        // Only run if the carts table exists
-        if (Schema::hasTable('carts')) {
-                    Schema::table('carts', function (Blueprint $table) {
+        Schema::table('carts', function (Blueprint $table) {
             //
         });
-        }
     }
 }

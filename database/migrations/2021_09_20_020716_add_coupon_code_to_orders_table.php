@@ -13,15 +13,9 @@ class AddCouponCodeToOrdersTable extends Migration
      */
     public function up()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'coupon_code')) {
-                $table->string('coupon_code')->nullable();
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->string('coupon_code')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddCouponCodeToOrdersTable extends Migration
      */
     public function down()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'coupon_code')) {
-                $table->dropColumn('coupon_code');
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('coupon_code');
         });
-        }
     }
 }

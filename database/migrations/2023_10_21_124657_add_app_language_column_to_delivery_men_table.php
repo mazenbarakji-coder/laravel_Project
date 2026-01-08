@@ -13,15 +13,9 @@ class AddAppLanguageColumnToDeliveryMenTable extends Migration
      */
     public function up()
     {
-        // Only run if the delivery_men table exists
-        if (Schema::hasTable('delivery_men')) {
-                    Schema::table('delivery_men', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('delivery_men', 'app_language')) {
-                $table->string('app_language')->default('en');
-            }
+        Schema::table('delivery_men', function (Blueprint $table) {
+            $table->string('app_language')->default('en');
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddAppLanguageColumnToDeliveryMenTable extends Migration
      */
     public function down()
     {
-        // Only run if the delivery_men table exists
-        if (Schema::hasTable('delivery_men')) {
-                    Schema::table('delivery_men', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('delivery_men', 'app_language')) {
-                $table->dropColumn('app_language');
-            }
+        Schema::table('delivery_men', function (Blueprint $table) {
+            $table->dropColumn('app_language');
         });
-        }
     }
 }

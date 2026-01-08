@@ -13,15 +13,9 @@ class AddIsBillingToShippingAddressesTable extends Migration
      */
     public function up()
     {
-        // Only run if the shipping_addresses table exists
-        if (Schema::hasTable('shipping_addresses')) {
-                    Schema::table('shipping_addresses', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('shipping_addresses', 'is_billing')) {
-                $table->boolean('is_billing')->nullable();
-            }
+        Schema::table('shipping_addresses', function (Blueprint $table) {
+            $table->boolean('is_billing')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddIsBillingToShippingAddressesTable extends Migration
      */
     public function down()
     {
-        // Only run if the shipping_addresses table exists
-        if (Schema::hasTable('shipping_addresses')) {
-                    Schema::table('shipping_addresses', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('shipping_addresses', 'is_billing')) {
-                $table->dropColumn('is_billing');
-            }
+        Schema::table('shipping_addresses', function (Blueprint $table) {
+            $table->dropColumn('is_billing');
         });
-        }
     }
 }

@@ -13,15 +13,9 @@ class AddColToOrderTable extends Migration
      */
     public function up()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'order_group_id')) {
-                $table->string('order_group_id')->default('def-order-group');
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->string('order_group_id')->default('def-order-group');
         });
-        }
     }
 
     /**
@@ -31,11 +25,8 @@ class AddColToOrderTable extends Migration
      */
     public function down()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             //
         });
-        }
     }
 }

@@ -13,19 +13,10 @@ class AddSocialColumnToUsersTable extends Migration
      */
     public function up()
     {
-        // Only run if the users table exists
-        if (Schema::hasTable('users')) {
-                    Schema::table('users', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'login_medium')) {
-                $table->string('login_medium')->nullable();
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('users', 'social_id')) {
-                $table->string('social_id')->nullable();
-            }
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('login_medium')->nullable();
+            $table->string('social_id')->nullable();
         });
-        }
     }
 
     /**
@@ -35,11 +26,8 @@ class AddSocialColumnToUsersTable extends Migration
      */
     public function down()
     {
-        // Only run if the users table exists
-        if (Schema::hasTable('users')) {
-                    Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
-        }
     }
 }

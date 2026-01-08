@@ -13,19 +13,10 @@ class ColumnUpdateOrderTransaction extends Migration
      */
     public function up()
     {
-        // Only run if the order_transactions table exists
-        if (Schema::hasTable('order_transactions')) {
-                    Schema::table('order_transactions', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('order_transactions', 'id')) {
-                $table->dropColumn('id');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('order_transactions', 'transaction_id')) {
-                $table->string('transaction_id')->nullable();
-            }
+        Schema::table('order_transactions', function (Blueprint $table) {
+            $table->dropColumn('id');
+            $table->string('transaction_id')->nullable();
         });
-        }
     }
 
     /**
@@ -35,11 +26,8 @@ class ColumnUpdateOrderTransaction extends Migration
      */
     public function down()
     {
-        // Only run if the order_transactions table exists
-        if (Schema::hasTable('order_transactions')) {
-                    Schema::table('order_transactions', function (Blueprint $table) {
+        Schema::table('order_transactions', function (Blueprint $table) {
             //
         });
-        }
     }
 }

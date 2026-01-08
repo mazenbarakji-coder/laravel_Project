@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
-            // Check if column exists before changing
-            if (Schema::hasColumn('products', 'denied_note')) {
-                $table->text('denied_note')->nullable()->change();
-            }
+        Schema::table('products', function (Blueprint $table) {
+            $table->text('denied_note')->nullable()->change();
         });
-        }
     }
 
     /**
@@ -27,11 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             //
         });
-        }
     }
 };

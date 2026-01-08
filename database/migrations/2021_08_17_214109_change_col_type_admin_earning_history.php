@@ -13,15 +13,9 @@ class ChangeColTypeAdminEarningHistory extends Migration
      */
     public function up()
     {
-        // Only run if the admin_wallet_histories table exists
-        if (Schema::hasTable('admin_wallet_histories')) {
-                    Schema::table('admin_wallet_histories', function (Blueprint $table) {
-            // Check if column exists before changing
-            if (Schema::hasColumn('admin_wallet_histories', 'amount')) {
-                $table->float('amount')->change();
-            }
+        Schema::table('admin_wallet_histories', function (Blueprint $table) {
+            $table->float('amount')->change();
         });
-        }
     }
 
     /**
@@ -31,11 +25,8 @@ class ChangeColTypeAdminEarningHistory extends Migration
      */
     public function down()
     {
-        // Only run if the admin_wallet_histories table exists
-        if (Schema::hasTable('admin_wallet_histories')) {
-                    Schema::table('admin_wallet_histories', function (Blueprint $table) {
+        Schema::table('admin_wallet_histories', function (Blueprint $table) {
             //
         });
-        }
     }
 }

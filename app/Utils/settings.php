@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\BusinessSetting;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -14,8 +13,6 @@ if (!function_exists('getWebConfig')) {
         if (in_array($name, $check) == true && session()->has($name)) {
             $config = session($name);
         } else {
-            try {
-                if (Schema::hasTable('business_settings')) {
             $data = BusinessSetting::where(['type' => $name])->first();
             if (isset($data)) {
                 $arrayOfCompaniesValue = ['company_web_logo', 'company_mobile_logo', 'company_footer_logo', 'company_fav_icon', 'loader_gif'];
@@ -31,12 +28,6 @@ if (!function_exists('getWebConfig')) {
                     $config = $data['value'];
                 }
             }
-                }
-            } catch (\Exception $e) {
-                // Table doesn't exist yet, return null
-                $config = null;
-            }
-            
             if (in_array($name, $check) == true) {
                 session()->put($name, $config);
             }

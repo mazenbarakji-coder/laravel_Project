@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Only run if the help_topics table exists
-        if (Schema::hasTable('help_topics')) {
-                    Schema::table('help_topics', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('help_topics', 'type')) {
-                $table->string('type')->default('default')->after('id');
-            }
+        Schema::table('help_topics', function (Blueprint $table) {
+            $table->string('type')->default('default')->after('id');
         });
-        }
     }
 
     /**
@@ -27,14 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Only run if the help_topics table exists
-        if (Schema::hasTable('help_topics')) {
-                    Schema::table('help_topics', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('help_topics', 'type')) {
-                $table->dropColumn('type');
-            }
+        Schema::table('help_topics', function (Blueprint $table) {
+            $table->dropColumn('type');
         });
-        }
     }
 };

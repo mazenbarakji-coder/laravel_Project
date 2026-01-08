@@ -13,15 +13,9 @@ class AddColorImageColumnToProductsTable extends Migration
      */
     public function up()
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'color_image')) {
-                $table->text('color_image')->after('images');
-            }
+        Schema::table('products', function (Blueprint $table) {
+            $table->text('color_image')->after('images');
         });
-        }
     }
 
     /**
@@ -31,11 +25,8 @@ class AddColorImageColumnToProductsTable extends Migration
      */
     public function down()
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             Schema::dropIfExists('color_image');
         });
-        }
     }
 }

@@ -13,15 +13,9 @@ class AddColToShopsTable extends Migration
      */
     public function up()
     {
-        // Only run if the shops table exists
-        if (Schema::hasTable('shops')) {
-            Schema::table('shops', function (Blueprint $table) {
-                // Check if column doesn't already exist
-                if (!Schema::hasColumn('shops', 'banner')) {
-                    $table->string('banner');
-                }
-            });
-        }
+        Schema::table('shops', function (Blueprint $table) {
+            $table->string('banner');
+        });
     }
 
     /**
@@ -31,14 +25,8 @@ class AddColToShopsTable extends Migration
      */
     public function down()
     {
-        // Only run if the shops table exists
-        if (Schema::hasTable('shops')) {
-            Schema::table('shops', function (Blueprint $table) {
-                // Check if column exists before dropping
-                if (Schema::hasColumn('shops', 'banner')) {
-                    $table->dropColumn(['banner']);
-                }
-            });
-        }
+        Schema::table('shops', function (Blueprint $table) {
+            //
+        });
     }
 }

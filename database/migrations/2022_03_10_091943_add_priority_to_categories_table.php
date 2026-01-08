@@ -13,15 +13,9 @@ class AddPriorityToCategoriesTable extends Migration
      */
     public function up()
     {
-        // Only run if the categories table exists
-        if (Schema::hasTable('categories')) {
-                    Schema::table('categories', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('categories', 'priority')) {
-                $table->integer('priority')->nullable();
-            }
+        Schema::table('categories', function (Blueprint $table) {
+            $table->integer('priority')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddPriorityToCategoriesTable extends Migration
      */
     public function down()
     {
-        // Only run if the categories table exists
-        if (Schema::hasTable('categories')) {
-                    Schema::table('categories', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('categories', 'priority')) {
-                $table->dropColumn('priority');
-            }
+        Schema::table('categories', function (Blueprint $table) {
+            $table->dropColumn('priority');
         });
-        }
     }
 }

@@ -13,15 +13,9 @@ class AddIsGuestColumnToOrdersTable extends Migration
      */
     public function up()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'is_guest')) {
-                $table->tinyInteger('is_guest')->default(0)->after('customer_id');
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->tinyInteger('is_guest')->default(0)->after('customer_id');
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddIsGuestColumnToOrdersTable extends Migration
      */
     public function down()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'is_guest')) {
-                $table->dropColumn('is_guest');
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('is_guest');
         });
-        }
     }
 }

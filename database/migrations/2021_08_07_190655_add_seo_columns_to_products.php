@@ -13,21 +13,11 @@ class AddSeoColumnsToProducts extends Migration
      */
     public function up()
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-            Schema::table('products', function (Blueprint $table) {
-                // Check if columns don't already exist
-                if (!Schema::hasColumn('products', 'meta_title')) {
-                    $table->string('meta_title')->nullable();
-                }
-                if (!Schema::hasColumn('products', 'meta_description')) {
-                    $table->string('meta_description')->nullable();
-                }
-                if (!Schema::hasColumn('products', 'meta_image')) {
-                    $table->string('meta_image')->nullable();
-                }
-            });
-        }
+        Schema::table('products', function (Blueprint $table) {
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('meta_image')->nullable();
+        });
     }
 
     /**
@@ -37,20 +27,8 @@ class AddSeoColumnsToProducts extends Migration
      */
     public function down()
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-            Schema::table('products', function (Blueprint $table) {
-                // Check if columns exist before dropping
-                if (Schema::hasColumn('products', 'meta_title')) {
-                    $table->dropColumn(['meta_title']);
-                }
-                if (Schema::hasColumn('products', 'meta_description')) {
-                    $table->dropColumn(['meta_description']);
-                }
-                if (Schema::hasColumn('products', 'meta_image')) {
-                    $table->dropColumn(['meta_image']);
-                }
-            });
-        }
+        Schema::table('products', function (Blueprint $table) {
+            //
+        });
     }
 }

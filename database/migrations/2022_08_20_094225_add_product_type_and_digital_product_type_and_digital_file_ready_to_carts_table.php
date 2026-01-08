@@ -13,13 +13,10 @@ class AddProductTypeAndDigitalProductTypeAndDigitalFileReadyToCartsTable extends
      */
     public function up()
     {
-        // Only run if the carts table exists
-        if (Schema::hasTable('carts')) {
-                    Schema::table('carts', function (Blueprint $table) {
+        Schema::table('carts', function (Blueprint $table) {
             $table->string('product_type', 20)->after('product_id')->default('physical');
             $table->string('digital_product_type', 30)->after('product_type')->nullable();
         });
-        }
     }
 
     /**
@@ -29,18 +26,9 @@ class AddProductTypeAndDigitalProductTypeAndDigitalFileReadyToCartsTable extends
      */
     public function down()
     {
-        // Only run if the carts table exists
-        if (Schema::hasTable('carts')) {
-                    Schema::table('carts', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('carts', 'product_type')) {
-                $table->dropColumn('product_type');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('carts', 'digital_product_type')) {
-                $table->dropColumn('digital_product_type');
-            }
+        Schema::table('carts', function (Blueprint $table) {
+            $table->dropColumn('product_type');
+            $table->dropColumn('digital_product_type');
         });
-        }
     }
 }

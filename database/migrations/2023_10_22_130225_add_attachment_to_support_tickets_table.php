@@ -13,15 +13,9 @@ class AddAttachmentToSupportTicketsTable extends Migration
      */
     public function up()
     {
-        // Only run if the support_tickets table exists
-        if (Schema::hasTable('support_tickets')) {
-                    Schema::table('support_tickets', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('support_tickets', 'attachment')) {
-                $table->json('attachment')->after('description')->nullable();
-            }
+        Schema::table('support_tickets', function (Blueprint $table) {
+            $table->json('attachment')->after('description')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddAttachmentToSupportTicketsTable extends Migration
      */
     public function down()
     {
-        // Only run if the support_tickets table exists
-        if (Schema::hasTable('support_tickets')) {
-                    Schema::table('support_tickets', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('support_tickets', 'attachment')) {
-                $table->dropColumn('attachment');
-            }
+        Schema::table('support_tickets', function (Blueprint $table) {
+            $table->dropColumn('attachment');
         });
-        }
     }
 }

@@ -14,15 +14,9 @@ class AddProvider extends Migration
     public function up()
     {
         if (!Schema::hasColumn('oauth_clients', 'provider')) {
-        // Only run if the oauth_clients table exists
-        if (Schema::hasTable('oauth_clients')) {
-                        Schema::table('oauth_clients', function (Blueprint $table) {
-                // Check if column doesn't already exist
-                if (!Schema::hasColumn('oauth_clients', 'provider')) {
-                    $table->string('provider')->nullable();
-                }
+            Schema::table('oauth_clients', function (Blueprint $table) {
+                $table->string('provider')->nullable();
             });
-        }
         }
     }
 
@@ -33,11 +27,8 @@ class AddProvider extends Migration
      */
     public function down()
     {
-        // Only run if the oauth_clients table exists
-        if (Schema::hasTable('oauth_clients')) {
-                    Schema::table('oauth_clients', function (Blueprint $table) {
+        Schema::table('oauth_clients', function (Blueprint $table) {
             //
         });
-        }
     }
 }

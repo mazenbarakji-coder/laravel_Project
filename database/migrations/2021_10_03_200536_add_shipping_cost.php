@@ -13,15 +13,9 @@ class AddShippingCost extends Migration
      */
     public function up()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'shipping_cost')) {
-                $table->float('shipping_cost')->default(0);
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->float('shipping_cost')->default(0);
         });
-        }
     }
 
     /**
@@ -31,11 +25,8 @@ class AddShippingCost extends Migration
      */
     public function down()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
 
         });
-        }
     }
 }

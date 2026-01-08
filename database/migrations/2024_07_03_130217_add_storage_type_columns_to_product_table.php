@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
+        Schema::table('products', function (Blueprint $table) {
             $table->string('thumbnail_storage_type',10)->default('public')->after('thumbnail')->nullable();
             $table->string('digital_file_ready_storage_type',10)->default('public')->after('digital_file_ready')->nullable();
         });
-        }
     }
 
     /**
@@ -25,18 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'thumbnail_storage_type')) {
-                $table->dropColumn('thumbnail_storage_type');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'digital_file_ready_storage_type')) {
-                $table->dropColumn('digital_file_ready_storage_type');
-            }
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('thumbnail_storage_type');
+            $table->dropColumn('digital_file_ready_storage_type');
         });
-        }
     }
 };

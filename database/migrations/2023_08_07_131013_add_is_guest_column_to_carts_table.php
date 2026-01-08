@@ -13,15 +13,9 @@ class AddIsGuestColumnToCartsTable extends Migration
      */
     public function up()
     {
-        // Only run if the carts table exists
-        if (Schema::hasTable('carts')) {
-                    Schema::table('carts', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('carts', 'is_guest')) {
-                $table->tinyInteger('is_guest')->default(0);
-            }
+        Schema::table('carts', function (Blueprint $table) {
+            $table->tinyInteger('is_guest')->default(0);
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddIsGuestColumnToCartsTable extends Migration
      */
     public function down()
     {
-        // Only run if the carts table exists
-        if (Schema::hasTable('carts')) {
-                    Schema::table('carts', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('carts', 'is_guest')) {
-                $table->dropColumn('is_guest');
-            }
+        Schema::table('carts', function (Blueprint $table) {
+            $table->dropColumn('is_guest');
         });
-        }
     }
 }

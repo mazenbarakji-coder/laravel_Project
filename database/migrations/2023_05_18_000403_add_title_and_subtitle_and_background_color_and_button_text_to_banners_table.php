@@ -13,27 +13,12 @@ class AddTitleAndSubtitleAndBackgroundColorAndButtonTextToBannersTable extends M
      */
     public function up()
     {
-        // Only run if the banners table exists
-        if (Schema::hasTable('banners')) {
-                    Schema::table('banners', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('banners', 'title')) {
-                $table->string('title')->after('resource_id')->nullable();
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('banners', 'sub_title')) {
-                $table->string('sub_title')->after('title')->nullable();
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('banners', 'button_text')) {
-                $table->string('button_text')->after('sub_title')->nullable();
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('banners', 'background_color')) {
-                $table->string('background_color')->after('button_text')->nullable();
-            }
+        Schema::table('banners', function (Blueprint $table) {
+            $table->string('title')->after('resource_id')->nullable();
+            $table->string('sub_title')->after('title')->nullable();
+            $table->string('button_text')->after('sub_title')->nullable();
+            $table->string('background_color')->after('button_text')->nullable();
         });
-        }
     }
 
     /**
@@ -43,14 +28,11 @@ class AddTitleAndSubtitleAndBackgroundColorAndButtonTextToBannersTable extends M
      */
     public function down()
     {
-        // Only run if the banners table exists
-        if (Schema::hasTable('banners')) {
-                    Schema::table('banners', function (Blueprint $table) {
+        Schema::table('banners', function (Blueprint $table) {
             Schema::dropIfExists('title');
             Schema::dropIfExists('sub_title');
             Schema::dropIfExists('button_text');
             Schema::dropIfExists('background_color');
         });
-        }
     }
 }

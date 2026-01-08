@@ -13,15 +13,9 @@ class AddDeliverymanInOrderTable extends Migration
      */
     public function up()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'delivery_man_id')) {
-                $table->bigInteger('delivery_man_id')->nullable();
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->bigInteger('delivery_man_id')->nullable();
         });
-        }
     }
 
     /**
@@ -31,11 +25,8 @@ class AddDeliverymanInOrderTable extends Migration
      */
     public function down()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
+        Schema::table('orders', function (Blueprint $table) {
             //
         });
-        }
     }
 }

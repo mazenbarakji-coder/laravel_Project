@@ -13,15 +13,9 @@ class AmountWithdrawReq extends Migration
      */
     public function up()
     {
-        // Only run if the withdraw_requests table exists
-        if (Schema::hasTable('withdraw_requests')) {
-            Schema::table('withdraw_requests', function (Blueprint $table) {
-                // Check if column exists before changing
-                if (Schema::hasColumn('withdraw_requests', 'amount')) {
-                    $table->string('amount')->change();
-                }
-            });
-        }
+        Schema::table('withdraw_requests', function (Blueprint $table) {
+            $table->string('amount')->change();
+        });
     }
 
     /**
@@ -31,15 +25,8 @@ class AmountWithdrawReq extends Migration
      */
     public function down()
     {
-        // Only run if the withdraw_requests table exists
-        if (Schema::hasTable('withdraw_requests')) {
-            Schema::table('withdraw_requests', function (Blueprint $table) {
-                // Revert column type change if needed
-                if (Schema::hasColumn('withdraw_requests', 'amount')) {
-                    // Note: Reverting string changes may require specific handling
-                    // Adjust based on your original column type
-                }
-            });
-        }
+        Schema::table('withdraw_requests', function (Blueprint $table) {
+            //
+        });
     }
 }

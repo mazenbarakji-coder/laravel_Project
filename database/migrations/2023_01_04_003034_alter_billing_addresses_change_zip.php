@@ -13,15 +13,9 @@ class AlterBillingAddressesChangeZip extends Migration
      */
     public function up()
     {
-        // Only run if the billing_addresses table exists
-        if (Schema::hasTable('billing_addresses')) {
-                    Schema::table('billing_addresses', function (Blueprint $table) {
-            // Check if column exists before changing
-            if (Schema::hasColumn('billing_addresses', 'zip')) {
-                $table->string('zip')->change();
-            }
+        Schema::table('billing_addresses', function (Blueprint $table) {
+            $table->string('zip')->change();
         });
-        }
     }
 
     /**
@@ -31,11 +25,8 @@ class AlterBillingAddressesChangeZip extends Migration
      */
     public function down()
     {
-        // Only run if the billing_addresses table exists
-        if (Schema::hasTable('billing_addresses')) {
-                    Schema::table('billing_addresses', function (Blueprint $table) {
+        Schema::table('billing_addresses', function (Blueprint $table) {
             //
         });
-        }
     }
 }

@@ -13,15 +13,9 @@ class AddActiveColUserTable extends Migration
      */
     public function up()
     {
-        // Only run if the users table exists
-        if (Schema::hasTable('users')) {
-            Schema::table('users', function (Blueprint $table) {
-                // Check if column doesn't already exist
-                if (!Schema::hasColumn('users', 'is_active')) {
-                    $table->boolean('is_active')->default(1);
-                }
-            });
-        }
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('is_active')->default(1);
+        });
     }
 
     /**
@@ -31,14 +25,8 @@ class AddActiveColUserTable extends Migration
      */
     public function down()
     {
-        // Only run if the users table exists
-        if (Schema::hasTable('users')) {
-            Schema::table('users', function (Blueprint $table) {
-                // Check if column exists before dropping
-                if (Schema::hasColumn('users', 'is_active')) {
-                    $table->dropColumn(['is_active']);
-                }
-            });
-        }
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 }

@@ -22,7 +22,6 @@ use App\Utils\CartManager;
 use App\Utils\OrderManager;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
@@ -165,19 +164,12 @@ class Helpers
         if (in_array($name, $check) == true && session()->has($name)) {
             $config = session($name);
         } else {
-            try {
-                if (Schema::hasTable('business_settings')) {
             $data = BusinessSetting::where(['type' => $name])->first();
             if (isset($data)) {
                 $config = json_decode($data['value'], true);
                 if (is_null($config)) {
                     $config = $data['value'];
                 }
-                    }
-                }
-            } catch (\Exception $e) {
-                // Table doesn't exist yet, return null
-                $config = null;
             }
 
             if (in_array($name, $check) == true) {
@@ -1409,19 +1401,12 @@ if (!function_exists('get_business_settings')) {
         if (in_array($name, $check) && session()->has($name)) {
             $config = session($name);
         } else {
-            try {
-                if (\Illuminate\Support\Facades\Schema::hasTable('business_settings')) {
-                    $data = \App\Models\BusinessSetting::where(['type' => $name])->first();
+            $data = BusinessSetting::where(['type' => $name])->first();
             if (isset($data)) {
                 $config = json_decode($data['value'], true);
                 if (is_null($config)) {
                     $config = $data['value'];
                 }
-                    }
-                }
-            } catch (\Exception $e) {
-                // Table doesn't exist yet, return null
-                $config = null;
             }
 
             if (in_array($name, $check)) {

@@ -13,15 +13,9 @@ class AddLimitToCouponsTable extends Migration
      */
     public function up()
     {
-        // Only run if the coupons table exists
-        if (Schema::hasTable('coupons')) {
-                    Schema::table('coupons', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('coupons', 'limit')) {
-                $table->integer('limit')->nullable();
-            }
+        Schema::table('coupons', function (Blueprint $table) {
+            $table->integer('limit')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddLimitToCouponsTable extends Migration
      */
     public function down()
     {
-        // Only run if the coupons table exists
-        if (Schema::hasTable('coupons')) {
-                    Schema::table('coupons', function (Blueprint $table) {
-             // Check if column doesn't already exist
-             if (!Schema::hasColumn('coupons', 'limit')) {
-                 $table->dropColumn('limit');
-             }
+        Schema::table('coupons', function (Blueprint $table) {
+             $table->dropColumn('limit');
         });
-        }
     }
 }

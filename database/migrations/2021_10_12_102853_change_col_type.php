@@ -13,15 +13,9 @@ class ChangeColType extends Migration
      */
     public function up()
     {
-        // Only run if the order_transactions table exists
-        if (Schema::hasTable('order_transactions')) {
-                    Schema::table('order_transactions', function (Blueprint $table) {
-            // Check if column exists before changing
-            if (Schema::hasColumn('order_transactions', 'id')) {
-                $table->string('id')->change();
-            }
+        Schema::table('order_transactions', function (Blueprint $table) {
+            $table->string('id')->change();
         });
-        }
     }
 
     /**
@@ -31,11 +25,8 @@ class ChangeColType extends Migration
      */
     public function down()
     {
-        // Only run if the order_transactions table exists
-        if (Schema::hasTable('order_transactions')) {
-                    Schema::table('order_transactions', function (Blueprint $table) {
+        Schema::table('order_transactions', function (Blueprint $table) {
             //
         });
-        }
     }
 }

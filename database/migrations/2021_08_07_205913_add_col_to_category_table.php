@@ -13,15 +13,9 @@ class AddColToCategoryTable extends Migration
      */
     public function up()
     {
-        // Only run if the categories table exists
-        if (Schema::hasTable('categories')) {
-            Schema::table('categories', function (Blueprint $table) {
-                // Check if column doesn't already exist
-                if (!Schema::hasColumn('categories', 'home_status')) {
-                    $table->boolean('home_status')->default(0);
-                }
-            });
-        }
+        Schema::table('categories', function (Blueprint $table) {
+            $table->boolean('home_status')->default(0);
+        });
     }
 
     /**
@@ -31,14 +25,8 @@ class AddColToCategoryTable extends Migration
      */
     public function down()
     {
-        // Only run if the categories table exists
-        if (Schema::hasTable('categories')) {
-            Schema::table('categories', function (Blueprint $table) {
-                // Check if column exists before dropping
-                if (Schema::hasColumn('categories', 'home_status')) {
-                    $table->dropColumn(['home_status']);
-                }
-            });
-        }
+        Schema::table('categories', function (Blueprint $table) {
+            //
+        });
     }
 }

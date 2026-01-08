@@ -13,15 +13,9 @@ class MakeMessageNullableInChattingsTable extends Migration
      */
     public function up()
     {
-        // Only run if the chattings table exists
-        if (Schema::hasTable('chattings')) {
-                    Schema::table('chattings', function (Blueprint $table) {
-            // Check if column exists before changing
-            if (Schema::hasColumn('chattings', 'message')) {
-                $table->text('message')->nullable()->change();
-            }
+        Schema::table('chattings', function (Blueprint $table) {
+            $table->text('message')->nullable()->change();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class MakeMessageNullableInChattingsTable extends Migration
      */
     public function down()
     {
-        // Only run if the chattings table exists
-        if (Schema::hasTable('chattings')) {
-                    Schema::table('chattings', function (Blueprint $table) {
-            // Check if column exists before changing
-            if (Schema::hasColumn('chattings', 'message')) {
-                $table->text('message')->change();
-            }
+        Schema::table('chattings', function (Blueprint $table) {
+            $table->text('message')->change();
         });
-        }
     }
 }

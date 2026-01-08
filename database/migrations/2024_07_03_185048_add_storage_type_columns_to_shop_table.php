@@ -11,15 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Only run if the shops table exists
-        if (Schema::hasTable('shops')) {
-                    Schema::table('shops', function (Blueprint $table) {
+        Schema::table('shops', function (Blueprint $table) {
             $table->string('image_storage_type',10)->default('public')->after('image')->nullable();
             $table->string('banner_storage_type',10)->default('public')->after('banner')->nullable();
             $table->string('bottom_banner_storage_type',10)->default('public')->after('bottom_banner')->nullable();
             $table->string('offer_banner_storage_type',10)->default('public')->after('offer_banner')->nullable();
         });
-        }
     }
 
     /**
@@ -27,26 +24,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Only run if the shops table exists
-        if (Schema::hasTable('shops')) {
-                    Schema::table('shops', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('shops', 'image_storage_type')) {
-                $table->dropColumn('image_storage_type');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('shops', 'banner_storage_type')) {
-                $table->dropColumn('banner_storage_type');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('shops', 'bottom_banner_storage_type')) {
-                $table->dropColumn('bottom_banner_storage_type');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('shops', 'offer_banner_storage_type')) {
-                $table->dropColumn('offer_banner_storage_type');
-            }
+        Schema::table('shops', function (Blueprint $table) {
+            $table->dropColumn('image_storage_type');
+            $table->dropColumn('banner_storage_type');
+            $table->dropColumn('bottom_banner_storage_type');
+            $table->dropColumn('offer_banner_storage_type');
         });
-        }
     }
 };

@@ -116,3 +116,5 @@ echo "   Skipped: {$skippedCount} migrations (already safe or no Schema::table)\
 echo "\n✅ All migrations have been fixed!\n";
 
 
+
+

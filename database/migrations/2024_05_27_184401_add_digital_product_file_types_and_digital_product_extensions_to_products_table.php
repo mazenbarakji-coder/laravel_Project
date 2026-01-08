@@ -11,19 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'digital_product_file_types')) {
-                $table->longText('digital_product_file_types')->nullable()->after('variation');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'digital_product_extensions')) {
-                $table->longText('digital_product_extensions')->nullable()->after('digital_product_file_types');
-            }
+        Schema::table('products', function (Blueprint $table) {
+            $table->longText('digital_product_file_types')->nullable()->after('variation');
+            $table->longText('digital_product_extensions')->nullable()->after('digital_product_file_types');
         });
-        }
     }
 
     /**
@@ -31,18 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-                    Schema::table('products', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'digital_product_file_types')) {
-                $table->dropColumn('digital_product_file_types');
-            }
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('products', 'digital_product_extensions')) {
-                $table->dropColumn('digital_product_extensions');
-            }
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('digital_product_file_types');
+            $table->dropColumn('digital_product_extensions');
         });
-        }
     }
 };

@@ -13,18 +13,10 @@ class ProductDisTax extends Migration
      */
     public function up()
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-            Schema::table('products', function (Blueprint $table) {
-                // Check if columns exist before changing
-                if (Schema::hasColumn('products', 'discount')) {
-                    $table->string('discount')->change();
-                }
-                if (Schema::hasColumn('products', 'tax')) {
-                    $table->string('tax')->change();
-                }
-            });
-        }
+        Schema::table('products', function (Blueprint $table) {
+            $table->string('discount')->change();
+            $table->string('tax')->change();
+        });
     }
 
     /**
@@ -34,19 +26,8 @@ class ProductDisTax extends Migration
      */
     public function down()
     {
-        // Only run if the products table exists
-        if (Schema::hasTable('products')) {
-            Schema::table('products', function (Blueprint $table) {
-                // Revert column type changes if needed
-                if (Schema::hasColumn('products', 'discount')) {
-                    // Note: Reverting string changes may require specific handling
-                    // Adjust based on your original column type
-                }
-                if (Schema::hasColumn('products', 'tax')) {
-                    // Note: Reverting string changes may require specific handling
-                    // Adjust based on your original column type
-                }
-            });
-        }
+        Schema::table('products', function (Blueprint $table) {
+            //
+        });
     }
 }

@@ -174,3 +174,5 @@ echo "\n✅ Migration fixing complete!\n";
 echo "💡 Run 'php artisan migrate --force' to test the fixes.\n";
 
 
+
+

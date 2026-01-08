@@ -13,15 +13,9 @@ class AddGstToSellersTable extends Migration
      */
     public function up()
     {
-        // Only run if the sellers table exists
-        if (Schema::hasTable('sellers')) {
-                    Schema::table('sellers', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('sellers', 'gst')) {
-                $table->string('gst')->nullable();
-            }
+        Schema::table('sellers', function (Blueprint $table) {
+            $table->string('gst')->nullable();
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddGstToSellersTable extends Migration
      */
     public function down()
     {
-        // Only run if the sellers table exists
-        if (Schema::hasTable('sellers')) {
-                    Schema::table('sellers', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('sellers', 'gst')) {
-                $table->dropColumn('gst');
-            }
+        Schema::table('sellers', function (Blueprint $table) {
+            $table->dropColumn('gst');
         });
-        }
     }
 }

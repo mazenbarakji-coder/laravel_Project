@@ -13,15 +13,9 @@ class AddColToContact extends Migration
      */
     public function up()
     {
-        // Only run if the contacts table exists
-        if (Schema::hasTable('contacts')) {
-            Schema::table('contacts', function (Blueprint $table) {
-                // Check if column doesn't already exist
-                if (!Schema::hasColumn('contacts', 'reply')) {
-                    $table->longText('reply')->nullable();
-                }
-            });
-        }
+        Schema::table('contacts', function (Blueprint $table) {
+            $table->longText('reply')->nullable();
+        });
     }
 
     /**
@@ -31,14 +25,8 @@ class AddColToContact extends Migration
      */
     public function down()
     {
-        // Only run if the contacts table exists
-        if (Schema::hasTable('contacts')) {
-            Schema::table('contacts', function (Blueprint $table) {
-                // Check if column exists before dropping
-                if (Schema::hasColumn('contacts', 'reply')) {
-                    $table->dropColumn(['reply']);
-                }
-            });
-        }
+        Schema::table('contacts', function (Blueprint $table) {
+            //
+        });
     }
 }

@@ -13,15 +13,9 @@ class AddShippingResponsibilityColumnToOrdersTable extends Migration
      */
     public function up()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'shipping_responsibility')) {
-                $table->string('shipping_responsibility')->nullable()->after('coupon_discount_bearer');
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->string('shipping_responsibility')->nullable()->after('coupon_discount_bearer');
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddShippingResponsibilityColumnToOrdersTable extends Migration
      */
     public function down()
     {
-        // Only run if the orders table exists
-        if (Schema::hasTable('orders')) {
-                    Schema::table('orders', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('orders', 'shipping_responsibility')) {
-                $table->dropColumn('shipping_responsibility');
-            }
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('shipping_responsibility');
         });
-        }
     }
 }

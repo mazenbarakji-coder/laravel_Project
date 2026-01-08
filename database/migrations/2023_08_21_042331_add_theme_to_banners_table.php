@@ -13,15 +13,9 @@ class AddThemeToBannersTable extends Migration
      */
     public function up()
     {
-        // Only run if the banners table exists
-        if (Schema::hasTable('banners')) {
-                    Schema::table('banners', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('banners', 'theme')) {
-                $table->string('theme')->after('banner_type')->default('default');
-            }
+        Schema::table('banners', function (Blueprint $table) {
+            $table->string('theme')->after('banner_type')->default('default');
         });
-        }
     }
 
     /**
@@ -31,14 +25,8 @@ class AddThemeToBannersTable extends Migration
      */
     public function down()
     {
-        // Only run if the banners table exists
-        if (Schema::hasTable('banners')) {
-                    Schema::table('banners', function (Blueprint $table) {
-            // Check if column doesn't already exist
-            if (!Schema::hasColumn('banners', 'theme')) {
-                $table->dropColumn('theme');
-            }
+        Schema::table('banners', function (Blueprint $table) {
+            $table->dropColumn('theme');
         });
-        }
     }
 }
