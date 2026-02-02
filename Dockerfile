@@ -20,4 +20,4 @@ RUN composer install --no-dev --optimize-autoloader \
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh","-c","php artisan serve --host=0.0.0.0 --port=$PORT"]
+#ENTRYPOINT ["sh","-c","php artisan serve --host=0.0.0.0 --port=$PORT"]
