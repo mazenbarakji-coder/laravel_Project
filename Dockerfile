@@ -18,6 +18,6 @@ RUN composer install --no-dev --optimize-autoloader \
     && php artisan key:generate --force || true \
     && php artisan config:clear
 
-EXPOSE 8080
+EXPOSE 8000
 
 #ENTRYPOINT ["sh","-c","php artisan serve --host=0.0.0.0 --port=$PORT"]
