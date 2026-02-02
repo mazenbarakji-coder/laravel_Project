@@ -8310,4 +8310,6 @@ return [
 	"search_by_brand_name" => "Search by brand name",
 	"there_is_no_Brand" => "There is no Brand",
 	"there_is_no_FAQs" => "There is no FAQs",
+	"after_adding_a_new_language,_you_need_to_translate_the_key_contents_for_users_to_experience_this_feature" => "After adding a new language  you need to translate the key contents for users to experience this feature",
+	"Finally,_click_‘Update’_to_save_the_changes" => "Finally  click ‘Update’ to save the changes",
 ];
